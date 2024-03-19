@@ -8,5 +8,10 @@ def start(c):
 
 
 @task
+def dev(c):
+    c.run('flask --app src/app --debug run', pty=True)
+
+
+@task
 def build(c):
     db_create_tables()
