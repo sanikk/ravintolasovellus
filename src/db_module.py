@@ -1,6 +1,10 @@
-def drop_tables():
+from app import db
+from sqlalchemy import text
+
+
+def get_all_users():
     pass
 
 
-def create_tables():
+def get_all_restaurants():
     pass

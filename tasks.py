@@ -1,5 +1,5 @@
 from invoke import task
-from src.db_module import create_tables as db_create_tables
+from src.db_setup import create_tables as db_create_tables, drop_tables as db_drop_tables
 
 
 @task
@@ -15,3 +15,8 @@ def dev(c):
 @task
 def build(c):
     db_create_tables()
+
+
+@task
+def clean(c):
+    db_drop_tables()
