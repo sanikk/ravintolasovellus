@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 80%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_458923e93fc4739dc8ba498d4d90c8ac {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_458923e93fc4739dc8ba498d4d90c8ac" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_458923e93fc4739dc8ba498d4d90c8ac = L.map(
+                "map_458923e93fc4739dc8ba498d4d90c8ac",
+                {
+                    center: [60.165, 24.94],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 14,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_f279875befe1c2a89ac5c2f984130350 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 20, "maxZoom": 20, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abcd", "tms": false}
+            );
+        
+    
+            tile_layer_f279875befe1c2a89ac5c2f984130350.addTo(map_458923e93fc4739dc8ba498d4d90c8ac);
+        
+    
+            var marker_174c0ae63b6cf818c9d05b8c73491045 = L.marker(
+                [60.165856931244114, 24.94480954601594],
+                {}
+            ).addTo(map_458923e93fc4739dc8ba498d4d90c8ac);
+        
+    
+            var icon_1ec487d9d25f98a709ef3ec4ddca3f15 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "cutlery", "iconColor": "white", "markerColor": "cadetblue", "prefix": "glyphicon"}
+            );
+            marker_174c0ae63b6cf818c9d05b8c73491045.setIcon(icon_1ec487d9d25f98a709ef3ec4ddca3f15);
+        
+    
+        var popup_4ef56f1d04f72f978a0c02aca69191b1 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_e733913fcd9877e351ef00b8939bfcb2 = $(`<div id="html_e733913fcd9877e351ef00b8939bfcb2" style="width: 100.0%; height: 100.0%;"><a href='http://google.fi/'>Webpage</a></div>`)[0];
+                popup_4ef56f1d04f72f978a0c02aca69191b1.setContent(html_e733913fcd9877e351ef00b8939bfcb2);
+            
+        
+
+        marker_174c0ae63b6cf818c9d05b8c73491045.bindPopup(popup_4ef56f1d04f72f978a0c02aca69191b1)
+        ;
+
+        
+    
+    
+            marker_174c0ae63b6cf818c9d05b8c73491045.bindTooltip(
+                `<div>
+                     Ravintola Ragu
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_bdbc867bb3a495356f3f59493d6fd035 = L.marker(
+                [60.16299590715181, 24.939252008943274],
+                {}
+            ).addTo(map_458923e93fc4739dc8ba498d4d90c8ac);
+        
+    
+            var icon_12b7b4dcb559dee596f8a93252213c4b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "cutlery", "iconColor": "white", "markerColor": "cadetblue", "prefix": "glyphicon"}
+            );
+            marker_bdbc867bb3a495356f3f59493d6fd035.setIcon(icon_12b7b4dcb559dee596f8a93252213c4b);
+        
+    
+        var popup_b03c030763eccd2432db5cb9ec475dae = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_5cd954c6b9f7fab95e4971d95f9089b4 = $(`<div id="html_5cd954c6b9f7fab95e4971d95f9089b4" style="width: 100.0%; height: 100.0%;"><a href='http://google.fi/'>Webpage</a></div>`)[0];
+                popup_b03c030763eccd2432db5cb9ec475dae.setContent(html_5cd954c6b9f7fab95e4971d95f9089b4);
+            
+        
+
+        marker_bdbc867bb3a495356f3f59493d6fd035.bindPopup(popup_b03c030763eccd2432db5cb9ec475dae)
+        ;
+
+        
+    
+    
+            marker_bdbc867bb3a495356f3f59493d6fd035.bindTooltip(
+                `<div>
+                     Istanbul Grilli
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_a20601529c6b4bebcd672ea14ee0806d = L.marker(
+                [60.16122365534795, 24.92996083703681],
+                {}
+            ).addTo(map_458923e93fc4739dc8ba498d4d90c8ac);
+        
+    
+            var icon_6ad2a818cf16bd2a991002e492ffd0d7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "cutlery", "iconColor": "white", "markerColor": "cadetblue", "prefix": "glyphicon"}
+            );
+            marker_a20601529c6b4bebcd672ea14ee0806d.setIcon(icon_6ad2a818cf16bd2a991002e492ffd0d7);
+        
+    
+        var popup_abde5c0438d9ba61391b278fb57805f6 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_f51b573ec9e51825e6ba651d050dbe2e = $(`<div id="html_f51b573ec9e51825e6ba651d050dbe2e" style="width: 100.0%; height: 100.0%;"><a href='http://google.fi/'>Webpage</a></div>`)[0];
+                popup_abde5c0438d9ba61391b278fb57805f6.setContent(html_f51b573ec9e51825e6ba651d050dbe2e);
+            
+        
+
+        marker_a20601529c6b4bebcd672ea14ee0806d.bindPopup(popup_abde5c0438d9ba61391b278fb57805f6)
+        ;
+
+        
+    
+    
+            marker_a20601529c6b4bebcd672ea14ee0806d.bindTooltip(
+                `<div>
+                     Ravintola Salve
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            tile_layer_f279875befe1c2a89ac5c2f984130350.addTo(map_458923e93fc4739dc8ba498d4d90c8ac);
+        
+</script>
+</html>
