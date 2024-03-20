@@ -2,7 +2,6 @@ from invoke import task
 from src.db_setup import create_tables as db_create_tables, drop_tables as db_drop_tables, insert_restaurant
 
 
-
 @task
 def start(c):
     c.run('flask --app src/app run', pty=True)
