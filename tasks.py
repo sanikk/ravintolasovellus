@@ -1,5 +1,6 @@
 from invoke import task
-from src.db_setup import create_tables as db_create_tables, drop_tables as db_drop_tables
+from src.db_setup import create_tables as db_create_tables, drop_tables as db_drop_tables, insert_restaurant
+
 
 
 @task
@@ -20,3 +21,8 @@ def build(c):
 @task
 def clean(c):
     db_drop_tables()
+
+
+@task
+def fill(c):
+    insert_restaurant()

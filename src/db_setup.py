@@ -14,21 +14,19 @@ def get_connection():
 
 def drop_tables():
     conn, cur = get_connection()
-    sql = "DROP TABLE IF EXISTS event_date"
-    cur.execute(sql)
-    sql = "DROP TABLE IF EXISTS event"
-    cur.execute(sql)
-    sql = "DROP TABLE IF EXISTS buffet"
-    cur.execute(sql)
-    sql = "DROP TABLE IF EXISTS account"
-    cur.execute(sql)
-    sql = "DROP TABLE IF EXISTS review"
-    cur.execute(sql)
-    sql = "DROP TABLE IF EXISTS restaurant"
-    cur.execute(sql)
-    sql = "DROP TABLE IF EXISTS account"
-    cur.execute(sql)
-
+    table_list = [
+        "specialty_restaurant",
+        "specialty",
+        "event_date",
+        "event",
+        "buffet",
+        "review",
+        "restaurant",
+        "account"
+    ]
+    for table in table_list:
+        sql = f"DROP TABLE IF EXISTS {table}"
+        cur.execute(sql)
     conn.commit()
     cur.close()
     conn.close()
@@ -36,6 +34,7 @@ def drop_tables():
 
 def create_tables():
     conn, cur = get_connection()
+
     sql = """CREATE TABLE IF NOT EXISTS account (
         id SERIAL PRIMARY KEY,
         username TEXT,
@@ -48,10 +47,8 @@ def create_tables():
     sql = """CREATE TABLE IF NOT EXISTS restaurant (
         id SERIAL PRIMARY KEY,
         name TEXT,
-        location TEXT,
-        homepage TEXT,
-        specialty TEXT,
-        accessibility TEXT
+        latitude FLOAT,
+        longitude FLOAT
     )"""
     cur.execute(sql)
 
@@ -60,6 +57,7 @@ def create_tables():
         account_id INTEGER REFERENCES account(id),
         restaurant_id INTEGER REFERENCES restaurant(id),
         posted_on TIMESTAMPTZ DEFAULT NOW(),
+        rating INTEGER,
         content TEXT
     )"""
     cur.execute(sql)
@@ -68,8 +66,8 @@ def create_tables():
         id SERIAL PRIMARY KEY,
         name TEXT,
         restaurant_id INTEGER REFERENCES restaurant(id),
-        posted_on TIMESTAMPZ DEFAULT NOW(),
-        account_id INTEGER REFERENCES account(id),
+        posted_on TIMESTAMPTZ DEFAULT NOW(),
+        account_id INTEGER REFERENCES account(id)
     )"""
     cur.execute(sql)
 
@@ -82,10 +80,40 @@ def create_tables():
     sql = """CREATE TABLE IF NOT EXISTS event_date (
         id SERIAL PRIMARY KEY,
         event_id INTEGER REFERENCES event(id),
-        event_date DATETIME
+        event_date TIMESTAMPTZ
+    )"""
+    cur.execute(sql)
+
+    sql = """CREATE TABLE IF NOT EXISTS specialty (
+        id SERIAL PRIMARY KEY,
+        name TEXT
+    )"""
+    cur.execute(sql)
+
+    sql = """CREATE TABLE IF NOT EXISTS specialty_restaurant (
+        restaurant_id INTEGER REFERENCES restaurant(id),
+        specialty_id INTEGER REFERENCES specialty(id)
     )"""
     cur.execute(sql)
 
     conn.commit()
     cur.close()
     conn.close()
+
+
+# dev db ops tools
+def insert_restaurant(restaurant_list=None):
+    conn, cur = get_connection()
+    if not restaurant_list:
+        restaurant_list = [
+            ('Ravintola Ragu', 60.165856931244114, 24.94480954601594),
+            ('Istanbul Grilli', 60.16299590715181, 24.939252008943274),
+            ('Ravintola Salve', 60.16122365534795, 24.92996083703681),
+        ]
+    sql = "INSERT INTO restaurant (name, latitude, longitude) VALUES (%s, %s, %s)"
+    for restaurant in restaurant_list:
+        cur.execute(sql, (*restaurant,))
+    conn.commit()
+    cur.close()
+    conn.close()
+
