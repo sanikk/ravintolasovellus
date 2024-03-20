@@ -1,10 +1,16 @@
 from flask import redirect, render_template, request
 from app import app
+from db_module import get_all_restaurants
 
 
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+@app.route("/restaurants")
+def restaurants():
+    return render_template("list_restaurants.html", restaurants=get_all_restaurants())
 
 
 @app.route("/map")

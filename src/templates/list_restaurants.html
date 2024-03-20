@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %}Restaurants{% endblock %}
+{% block content %}
+<h2>Restaurants</h2>
+<p>Bestest restaurant app in the business!</p>
+<ul>
+    {% for restaurant in restaurants %}
+        <li>
+            <a href="/restaurant/"{{ restaurant[0] }}>{{ restaurant}}</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
