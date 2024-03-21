@@ -12,6 +12,11 @@ def get_all_restaurants():
     return db.session.execute(text(sql)).fetchall()
 
 
+def get_single_restaurant(restaurant_id: int):
+    sql = "SELECT name, latitude, longitude FROM restaurant WHERE id = :restaurant_id"
+    return db.session.execute(text(sql), {"restaurant_id": restaurant_id}).fetchone()
+
+
 def get_all_reviews():
     sql = "SELECT * FROM review"
     return db.session.execute(text(sql)).fetchall()

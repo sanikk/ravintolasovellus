@@ -1,12 +1,15 @@
 from flask import redirect, render_template, request
 from app import app
-from db_module import get_all_restaurants, get_all_accounts
+
+from db_module import get_all_restaurants, get_single_restaurant
+from db_module import get_all_accounts
+
 from map_service import get_map
 
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("map_page.html", iframe=get_map())
 
 
 @app.route("/accounts")
@@ -22,9 +25,7 @@ def restaurants():
 
 @app.route("/restaurants/<int:restaurant_id>")
 def single_restaurant(restaurant_id):
-    return render_template("single_restaurant.html")
+    name, lat, lng = get_single_restaurant(restaurant_id)
+    return render_template("single_restaurant.html", name=name, lat=lat, lng=lng)
 
 
-@app.route("/map")
-def map_view():
-    return render_template("map_page.html", iframe=get_map())
