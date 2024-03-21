@@ -2,7 +2,7 @@ from app import db
 from sqlalchemy import text
 
 
-def get_all_users():
+def get_all_accounts():
     sql = "SELECT * FROM account"
     return db.session.execute(text(sql)).fetchall()
 
