@@ -48,7 +48,9 @@ def create_tables():
         id SERIAL PRIMARY KEY,
         name TEXT,
         latitude FLOAT,
-        longitude FLOAT
+        longitude FLOAT,
+        place_id TEXT,
+        address TEXT
     )"""
     cur.execute(sql)
 
@@ -99,21 +101,3 @@ def create_tables():
     conn.commit()
     cur.close()
     conn.close()
-
-
-# dev db ops tools
-def insert_restaurant(restaurant_list=None):
-    conn, cur = get_connection()
-    if not restaurant_list:
-        restaurant_list = [
-            ('Ravintola Ragu', 60.165856931244114, 24.94480954601594),
-            ('Istanbul Grilli', 60.16299590715181, 24.939252008943274),
-            ('Ravintola Salve', 60.16122365534795, 24.92996083703681),
-        ]
-    sql = "INSERT INTO restaurant (name, latitude, longitude) VALUES (%s, %s, %s)"
-    for restaurant in restaurant_list:
-        cur.execute(sql, (*restaurant,))
-    conn.commit()
-    cur.close()
-    conn.close()
-

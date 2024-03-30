@@ -8,12 +8,12 @@ def get_all_accounts():
 
 
 def get_all_restaurants():
-    sql = "SELECT * FROM restaurant"
+    sql = "SELECT id, name, latitude, longitude FROM restaurant"
     return db.session.execute(text(sql)).fetchall()
 
 
 def get_single_restaurant(restaurant_id: int):
-    sql = "SELECT name, latitude, longitude FROM restaurant WHERE id = :restaurant_id"
+    sql = "SELECT name, latitude, longitude, place_id, address FROM restaurant WHERE id = :restaurant_id"
     return db.session.execute(text(sql), {"restaurant_id": restaurant_id}).fetchone()
 
 
