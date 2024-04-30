@@ -1,4 +1,4 @@
-from psycopg2 import connect
+from psycopg import connect
 from os import getenv
 from dotenv import load_dotenv
 

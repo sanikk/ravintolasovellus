@@ -3,7 +3,7 @@ from app import app
 
 from db_module import get_all_restaurants, get_single_restaurant
 from db_module import get_all_accounts
-from db_module import get_all_reviews
+from db_module import get_all_reviews, get_single_review
 
 from map_service import get_map
 

@@ -20,3 +20,7 @@ def get_single_restaurant(restaurant_id: int):
 def get_all_reviews():
     sql = "SELECT * FROM review"
     return db.session.execute(text(sql)).fetchall()
+
+
+def get_single_review():
+    pass
