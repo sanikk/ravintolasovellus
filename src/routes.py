@@ -1,9 +1,9 @@
 from flask import redirect, render_template, request
 from app import app
 
-from db_module import get_all_restaurants, get_single_restaurant
-from db_module import get_all_accounts
-from db_module import get_all_reviews, get_single_review
+from db_module import get_restaurants_all, get_restaurants_single
+from db_module import get_accounts_all
+from db_module import get_ratings_all, get_ratings_single
 
 from map_service import get_map
 
@@ -15,27 +15,39 @@ def index():
 
 @app.route("/accounts")
 def accounts():
-    accounts_list = get_all_accounts()
-    return render_template("list_accounts.html", accounts=accounts_list)
+    accounts_list = get_accounts_all()
+    return render_template("accounts_list.html", accounts=accounts_list)
 
 
 @app.route("/restaurants")
 def restaurants():
-    return render_template("list_restaurants.html", restaurants=get_all_restaurants())
+    return render_template("restaurants_list.html", restaurants=get_restaurants_all())
 
 
 @app.route("/restaurants/<int:restaurant_id>")
 def single_restaurant(restaurant_id):
-    name, lat, lng, place_id, address = get_single_restaurant(restaurant_id)
-    return render_template("single_restaurant.html", name=name, lat=lat, lng=lng, place_id=place_id, address=address)
+    name, lat, lng, place_id, address = get_restaurants_single(restaurant_id)
+    return render_template(
+        "restaurants_single.html",
+        name=name,
+        lat=lat,
+        lng=lng,
+        place_id=place_id,
+        address=address,
+    )
+
+
+@app.route("/restaurants/new")
+def add_restaurant():
+    return render_template("restaurants_new.html")
 
 
 @app.route("/ratings")
 def ratings():
-    return render_template("list_ratings.html", ratings=get_all_reviews())
+    return render_template("ratings_list.html", ratings=get_ratings_all())
 
 
-@app.route("/reviews/<int:review_id>")
-def single_review(review_id):
-    review = get_single_review(review_id)
-    return render_template("single_review.html", review=review)
+@app.route("/ratings/<int:rating_id>")
+def single_rating(rating_id):
+    rating = get_ratings_single(rating_id)
+    return render_template("ratings_single.html", rating=rating)
