@@ -1,8 +1,12 @@
-from flask import redirect, render_template, request
+from flask import redirect, render_template, request, session, url_for
 from app import app
 
 from db_module import get_restaurants_all, get_restaurants_single
-from db_module import get_accounts_all
+from db_module import (
+    get_accounts_all,
+    check_username_and_password,
+    get_account_by_user_id,
+)
 from db_module import get_ratings_all, get_ratings_single
 
 from map_service import get_map
@@ -17,6 +21,24 @@ def index():
 def accounts():
     accounts_list = get_accounts_all()
     return render_template("accounts_list.html", accounts=accounts_list)
+
+
+@app.route("/accounts/<int:user_id>")
+def accounts_single(user_id: int):
+    account = get_account_by_user_id(user_id)
+    return render_template("accounts_single.html", account=account)
+
+
+@app.route("/accounts/login", methods=["POST"])
+def login_user():
+    username = request.form["username"]
+    password = request.form["password"]
+    ret = check_username_and_password(username, password)
+    if not ret:
+        return redirect("/")
+    session["user_id"], session["username"], session["screenname"] = ret
+    return redirect(url_for("accounts", user_id=session["user_id"]))
+    # return redirect("/accounts/:user_id", {"user_id": user_id})
 
 
 @app.route("/restaurants")

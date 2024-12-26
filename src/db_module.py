@@ -11,6 +11,19 @@ def create_user(username: str, password: str):
     db.session.commit()
 
 
+def check_username_and_password(username: str, password: str):
+    sql = "SELECT id, username, password, firstname, lastname FROM accounts WHERE username=:username"
+    user = db.session.execute(text(sql), {"username": username}).fetchone()
+    if not user:
+        # TODO: show error to user
+        return
+    if check_password_hash(user.password, password):
+        # TODO: great success!
+        return id, user.username, user.firstname or user.lastname
+    # TODO: inform user of failure
+    return
+
+
 def get_accounts_all():
     sql = "SELECT * FROM accounts"
     return db.session.execute(text(sql)).fetchall()
@@ -19,6 +32,11 @@ def get_accounts_all():
 def get_account_by_username(username: str):
     sql = "SELECT * FROM accounts WHERE username = :username"
     return db.session.execute(text(sql), {"username": username})
+
+
+def get_account_by_user_id(user_id: int):
+    sql = "SELECT * FROM accounts WHERE id = :user_id"
+    return db.session.execute(text(sql), {"user_id": user_id})
 
 
 def get_restaurants_all():

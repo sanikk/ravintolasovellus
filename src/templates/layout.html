@@ -1,14 +1,31 @@
 <!DOCTYPE html>
 <title>
-    {% block title %}{% endblock %} - restaurantapp
+    {% block title %}{% endblock %} - RestaurantApp
 </title>
 <h1>
     Restaurantapp
 </h1>
-<a href="/">Front page</a>
-<a href="/restaurants">Restaurants</a>
-<a href="/ratings">Reviews</a>
-<a href="/accounts">Accounts</a>
+<nav style="white-space: nowrap;">
+    <div style="float: left;">
+        <a href="/">Front page</a>
+        <a href="/restaurants">Restaurants</a>
+        <a href="/ratings">Reviews</a>
+        <a href="/accounts">Accounts</a>
+    </div>
+    <div style="float: right;">
+        {% if session.screenname %}
+            You are logged in as {session.screenname}
+            <a href="/accounts/logout">(Logout)</a>
+        {% else %}
+            <form action="/accounts/login" method="POST" style="display: inline;">
+                Username: <input type="text" name="username"> Password: <input type="text" name="password">
+                <button type="submit">Login</button>
+            </form>
+            or <a href="/accounts/new">Register</a>
+        {% endif %}
+    </div>
+</nav>
+<br>
 <hr>
 {% block content %} {% endblock %}
 <hr>
