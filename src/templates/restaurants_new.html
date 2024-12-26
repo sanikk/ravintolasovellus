@@ -1,0 +1,15 @@
+
+{% extends "layout.html" %}
+{% block title %}Restaurants{% endblock %}
+{% block content %}
+<h2>Add new Restaurant</h2>
+<p>Add your Bestest Restaurant to the Bestest Restaurant App in the business!</p>
+<form action="/restaurants/new" method="POST">
+Add a new restaurant
+    <br>
+    Name: <input type="text" name="name"><br>
+Address: <input type="text" name="address"> 
+</form>
+
+
+{% endblock %}
