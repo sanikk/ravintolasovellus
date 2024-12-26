@@ -1,13 +1,10 @@
 from psycopg import connect
-from os import getenv
-from dotenv import load_dotenv
-
-
-load_dotenv()
+from src.config import DATABASE_NAME
 
 
 def get_connection():
-    conn = connect(f"dbname={getenv('SQLALCHEMY_DATABASE_URI')}")
+    print(f"{DATABASE_NAME=}")
+    conn = connect(f"dbname={DATABASE_NAME}")
     cur = conn.cursor()
     return conn, cur
 
@@ -15,18 +12,19 @@ def get_connection():
 def drop_tables():
     conn, cur = get_connection()
     table_list = [
-        "specialty_restaurant",
-        "specialty",
-        "event_date",
-        "event",
-        "buffet",
-        "review",
-        "restaurant",
-        "account"
+        "speciality_restaurants",
+        "specialities",
+        "event_dates",
+        "events",
+        "buffets",
+        "ratings",
+        "restaurants",
+        "accounts",
     ]
     for table in table_list:
-        sql = f"DROP TABLE IF EXISTS {table}"
-        cur.execute(sql)
+        sql = """DROP TABLE IF EXISTS %s"""
+        # sql = text(f"DROP TABLE IF EXISTS {table}")
+        cur.execute(sql, table)
     conn.commit()
     cur.close()
     conn.close()
@@ -35,7 +33,7 @@ def drop_tables():
 def create_tables():
     conn, cur = get_connection()
 
-    sql = """CREATE TABLE IF NOT EXISTS account (
+    sql = """CREATE TABLE IF NOT EXISTS accounts (
         id SERIAL PRIMARY KEY,
         username TEXT,
         realname TEXT,
@@ -44,9 +42,10 @@ def create_tables():
     )"""
     cur.execute(sql)
 
-    sql = """CREATE TABLE IF NOT EXISTS restaurant (
+    sql = """CREATE TABLE IF NOT EXISTS restaurants (
         id SERIAL PRIMARY KEY,
         name TEXT,
+        admin_id INTEGER REFERENCES accounts(id),
         latitude FLOAT,
         longitude FLOAT,
         place_id TEXT,
@@ -54,47 +53,47 @@ def create_tables():
     )"""
     cur.execute(sql)
 
-    sql = """CREATE TABLE IF NOT EXISTS review (
+    sql = """CREATE TABLE IF NOT EXISTS ratings (
         id SERIAL PRIMARY KEY,
-        account_id INTEGER REFERENCES account(id),
-        restaurant_id INTEGER REFERENCES restaurant(id),
+        account_id INTEGER REFERENCES accounts(id),
+        restaurant_id INTEGER REFERENCES restaurants(id),
         posted_on TIMESTAMPTZ DEFAULT NOW(),
         rating INTEGER,
         content TEXT
     )"""
     cur.execute(sql)
 
-    sql = """CREATE TABLE IF NOT EXISTS event (
+    sql = """CREATE TABLE IF NOT EXISTS events (
         id SERIAL PRIMARY KEY,
         name TEXT,
-        restaurant_id INTEGER REFERENCES restaurant(id),
+        restaurant_id INTEGER REFERENCES restaurants(id),
         posted_on TIMESTAMPTZ DEFAULT NOW(),
-        account_id INTEGER REFERENCES account(id)
+        account_id INTEGER REFERENCES accounts(id)
     )"""
     cur.execute(sql)
 
-    sql = """CREATE TABLE IF NOT EXISTS buffet (
+    sql = """CREATE TABLE IF NOT EXISTS buffets (
         id SERIAL PRIMARY KEY,
-        restaurant_id INTEGER REFERENCES restaurant(id)
+        restaurant_id INTEGER REFERENCES restaurants(id)
     )"""
     cur.execute(sql)
 
-    sql = """CREATE TABLE IF NOT EXISTS event_date (
+    sql = """CREATE TABLE IF NOT EXISTS event_dates (
         id SERIAL PRIMARY KEY,
-        event_id INTEGER REFERENCES event(id),
+        event_id INTEGER REFERENCES events(id),
         event_date TIMESTAMPTZ
     )"""
     cur.execute(sql)
 
-    sql = """CREATE TABLE IF NOT EXISTS specialty (
+    sql = """CREATE TABLE IF NOT EXISTS specialities (
         id SERIAL PRIMARY KEY,
         name TEXT
     )"""
     cur.execute(sql)
 
-    sql = """CREATE TABLE IF NOT EXISTS specialty_restaurant (
-        restaurant_id INTEGER REFERENCES restaurant(id),
-        specialty_id INTEGER REFERENCES specialty(id)
+    sql = """CREATE TABLE IF NOT EXISTS speciality_restaurants (
+        restaurant_id INTEGER REFERENCES restaurants(id),
+        speciality_id INTEGER REFERENCES specialities(id)
     )"""
     cur.execute(sql)
 
