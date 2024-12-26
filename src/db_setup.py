@@ -1,4 +1,5 @@
 from psycopg import connect
+from psycopg.sql import SQL, Identifier
 from src.config import DATABASE_NAME
 
 
@@ -22,9 +23,9 @@ def drop_tables():
         "accounts",
     ]
     for table in table_list:
-        sql = """DROP TABLE IF EXISTS %s"""
-        # sql = text(f"DROP TABLE IF EXISTS {table}")
-        cur.execute(sql, table)
+        # sql = """DROP TABLE IF EXISTS %s"""
+        sql = SQL("DROP TABLE IF EXISTS {}").format(Identifier(table))
+        cur.execute(sql)
     conn.commit()
     cur.close()
     conn.close()
@@ -36,7 +37,8 @@ def create_tables():
     sql = """CREATE TABLE IF NOT EXISTS accounts (
         id SERIAL PRIMARY KEY,
         username TEXT,
-        realname TEXT,
+        firstname TEXT,
+        lastname TEXT,
         password TEXT,
         role INTEGER
     )"""
