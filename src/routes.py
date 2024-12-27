@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, session, url_for
+from flask import flash, redirect, render_template, request, session, url_for
 from app import app
 
 from db_module import get_restaurants_all, get_restaurants_single
@@ -6,6 +6,7 @@ from db_module import (
     get_accounts_all,
     check_username_and_password,
     get_account_by_user_id,
+    create_user,
 )
 from db_module import get_ratings_all, get_ratings_single
 
@@ -29,6 +30,34 @@ def accounts_single(user_id: int):
     return render_template("accounts_single.html", account=account)
 
 
+@app.route("/accounts/registration")
+def accounts_register():
+    return render_template("accounts_new.html")
+
+
+@app.route("/accounts/new", methods=["POST"])
+def accounts_new():
+    print(request.form)
+    username, firstname, lastname, password1, password2 = request.form.values()
+    error = []
+
+    if password1 != password2:
+        error.append("Passwords did not match.")
+    if not username:
+        error.append("Username can't be empty")
+
+    if not error:
+        create_user(username, firstname, lastname, password1)
+        flash("User created.")
+        return redirect("/")
+
+    return render_template(
+        "accounts_new.html",
+        form_data=request.form,
+        error=error,
+    )
+
+
 @app.route("/accounts/login", methods=["POST"])
 def login_user():
     username = request.form["username"]
@@ -37,8 +66,9 @@ def login_user():
     if not ret:
         return redirect("/")
     session["user_id"], session["username"], session["screenname"] = ret
-    return redirect(url_for("accounts", user_id=session["user_id"]))
-    # return redirect("/accounts/:user_id", {"user_id": user_id})
+    # return redirect(url_for("accounts", user_id=session["user_id"]))
+    # return redirect(url_for("accounts", user_id=ret[0]))
+    return redirect("/")
 
 
 @app.route("/restaurants")

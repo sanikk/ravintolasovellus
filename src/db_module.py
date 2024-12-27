@@ -4,10 +4,18 @@ from sqlalchemy import text
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
-def create_user(username: str, password: str):
-    sql = "INSERT INTO accounts (username, password) VALUES (:username, :password)"
+def create_user(username: str, firstname: str, lastname: str, password: str):
+    sql = "INSERT INTO accounts (username, firstname, lastname, password) VALUES (:username, :firstname, :lastname, :password)"
     le_hash = generate_password_hash(password)
-    db.session.execute(text(sql), {"username": username, "password": le_hash})
+    db.session.execute(
+        text(sql),
+        {
+            "username": username,
+            "firstname": firstname,
+            "lastname": lastname,
+            "password": le_hash,
+        },
+    )
     db.session.commit()
 
 
