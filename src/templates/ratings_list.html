@@ -2,11 +2,11 @@
 {% block title %}Reviews{% endblock %}
 {% block content %}
 <h2>Reviews</h2>
-<p>Bestest restaurant app in the business!</p>
+<p>Best restaurant app in the business!</p>
 <ul>
-    {% for rev in reviews %}
+    {% for rat in ratings %}
         <li>
-            <a href="/reviews/{{ rev[0] }}">{{ rev }}</a>
+            <a href="/ratings/{{ rat[0] }}">{{ rat }}</a>
         </li>
     {% endfor %}
 </ul>

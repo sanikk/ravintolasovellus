@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<h2>Register account</h2>
+<p>Add your Best Self to the Best Restaurant App in the business!</p>
+<form action="/accounts/new" method="POST">
+    <label class="flabel">Username</label>  <input class="finput" type="text" name="username">
+    <label class="flabel">First Name</label> <input class="finput" type="text" name="firstname">
+    <label class="flabel">Last Name</label> <input class="finput" type="text" name="lastname">
+    <label class="flabel">Password</label>   <input class="finput" type="password" name="password1">
+    <label class="flabel">Password again</label> <input class="finput" type="password" name="password2"> 
+    <button class="fbutton" action="submit">Register</button>
+</form>
+
+
+{% endblock %}
