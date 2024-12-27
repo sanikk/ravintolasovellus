@@ -1,8 +1,10 @@
 from flask import flash, redirect, render_template, request, session, url_for
 from app import app
 
+# from convert_address import get_lat_long_placeid
+
 from db_module import (
-    get_account_by_username,
+    create_restaurant,
     get_restaurants_all,
     get_restaurants_single,
 )
@@ -10,6 +12,7 @@ from db_module import (
     get_accounts_all,
     check_username_and_password,
     get_account_by_user_id,
+    get_account_by_username,
     create_user,
 )
 from db_module import get_ratings_all, get_ratings_single
@@ -31,7 +34,6 @@ def accounts():
 @app.route("/accounts/<int:user_id>")
 def accounts_single(user_id: int):
     account = get_account_by_user_id(user_id)
-    print(f"{account=}")
     return render_template("accounts_single.html", account=account)
 
 
@@ -40,7 +42,7 @@ def accounts_register():
     return render_template("accounts_new.html")
 
 
-@app.route("/accounts/new", methods=["POST"])
+@app.route("/accounts/create", methods=["POST"])
 def accounts_new():
     username, firstname, lastname, password1, password2 = request.form.values()
     error = []
@@ -70,7 +72,7 @@ def login_user():
     ret = check_username_and_password(username, password)
     if not ret:
         return redirect(request.referrer or "/")
-    print(f"{ret=}")
+    # print(f"{ret=}")
     # session["user_id"] = ret.user_id
     session["user_id"], session["username"], session["screenname"] = ret
     return redirect(request.referrer or "/")
@@ -97,6 +99,30 @@ def single_restaurant(restaurant_id):
 @app.route("/restaurants/new")
 def add_restaurant():
     return render_template("restaurants_new.html")
+
+
+@app.route("/restaurants/create", methods=["POST"])
+def new_restaurant():
+    error = []
+    if not session["user_id"]:
+        error.append("You are not logged in.")
+        return redirect(request.referrer or "/restaurants")
+    admin_id = session["user_id"]
+    name = request.form["name"]
+    if not name:
+        error.append("Restaurant needs a name.")
+    address = request.form["address"]
+    if not address:
+        error.append("Restaurant needs an address.")
+    # lat, long, place_id = get_lat_long_placeid(address)
+    # if not lat or long:
+    #     error.append("There was an error resolving the address.")
+    ret = create_restaurant(name=name, admin_id=admin_id, address=address)
+    if not ret:
+        error.append("There was no return index. Something went wrong?")
+    if error:
+        return render_template("/restaurants/new", error=error)
+    return redirect(request.referrer or "/restaurants")
 
 
 @app.route("/ratings")

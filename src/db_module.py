@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 def create_user(username: str, firstname: str, lastname: str, password: str):
     sql = "INSERT INTO accounts (username, firstname, lastname, password) VALUES (:username, :firstname, :lastname, :password)"
     le_hash = generate_password_hash(password)
-    db.session.execute(
+    ret = db.session.execute(
         text(sql),
         {
             "username": username,
@@ -56,6 +56,24 @@ def get_restaurants_all():
 def get_restaurants_single(restaurant_id: int):
     sql = "SELECT name, latitude, longitude, place_id, address FROM restaurants WHERE id = :restaurant_id"
     return db.session.execute(text(sql), {"restaurant_id": restaurant_id}).fetchone()
+
+
+#        id SERIAL PRIMARY KEY,
+#        name TEXT,
+#        admin_id INTEGER REFERENCES accounts(id),
+#        latitude FLOAT,
+#        longitude FLOAT,
+#        place_id TEXT,
+#        address TEXT
+
+
+def create_restaurant(name, admin_id, address):
+    sql = "INSERT INTO restaurants (name, admin_id, address) VALUES (:name, :admin_id, :address) RETURNING id"
+    ret = db.session.execute(
+        text(sql), {"name": name, "admin_id": admin_id, "address": address}
+    )
+    db.session.commit()
+    return ret.scalar()
 
 
 def get_ratings_all():
