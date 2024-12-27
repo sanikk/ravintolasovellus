@@ -9,10 +9,13 @@
 <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
+{% for error in errors %}
+    <div class="error_message">{{error}}</div>
+{% endfor %}
 {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div id="flash_message">{{messages[0]}}</div>
-    {% endif %}
+    {% for message in messages %}
+        <div class="flash_message">{{message}}</div>
+    {% endfor %}
 {% endwith %}
 <nav style="white-space: nowrap;">
     <div style="float: left;">
@@ -31,7 +34,7 @@
             <a href="/accounts/logout">(Logout)</a>
         {% else %}
             <form action="/accounts/login" method="POST" style="display: inline;">
-                Username: <input type="text" name="username"> Password: <input type="text" name="password">
+                Username: <input type="text" name="username"> Password: <input type="password" name="password">
                 <button type="submit">Login</button>
             </form>
             or <a href="/accounts/registration">Register</a>
@@ -44,9 +47,15 @@
 <hr>
 © 2024 Samuli Nikkilä
 <script>
-const elem = document.getElementById('flash_message');
-if (elem) {
-    setTimeout(() => elem.style.display = 'none', 5000);
-}
+document.querySelectorAll('.error_message').forEach((elem, index) => {
+    setTimeout(() => {
+        elem.style.display = 'none';
+    }, 5000 * (index + 1));
+});
+document.querySelectorAll('.flash_message').forEach((elem, index) => {
+    setTimeout(() => {
+        elem.style.display = 'none';
+    }, 5000 * (index + 1));
+});
 </script>
 </body>

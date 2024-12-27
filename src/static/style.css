@@ -17,7 +17,12 @@ form {
     margin: auto;
 }
 
-#flash_message {
-    font-size: 2em;
+.flash_message {
+    font-size: 1.5em;
     color: #00ba37;
+}
+
+.error_message {
+    font-size: 1.5em;
+    color: #b32d2e;
 }
