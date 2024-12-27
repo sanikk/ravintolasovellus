@@ -36,7 +36,7 @@ def create_tables():
 
     sql = """CREATE TABLE IF NOT EXISTS accounts (
         id SERIAL PRIMARY KEY,
-        username TEXT,
+        username TEXT UNIQUE,
         firstname TEXT,
         lastname TEXT,
         password TEXT,

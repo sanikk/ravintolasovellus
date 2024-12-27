@@ -1,7 +1,11 @@
 from flask import flash, redirect, render_template, request, session, url_for
 from app import app
 
-from db_module import get_restaurants_all, get_restaurants_single
+from db_module import (
+    get_account_by_username,
+    get_restaurants_all,
+    get_restaurants_single,
+)
 from db_module import (
     get_accounts_all,
     check_username_and_password,
@@ -27,6 +31,7 @@ def accounts():
 @app.route("/accounts/<int:user_id>")
 def accounts_single(user_id: int):
     account = get_account_by_user_id(user_id)
+    print(f"{account=}")
     return render_template("accounts_single.html", account=account)
 
 
@@ -37,7 +42,6 @@ def accounts_register():
 
 @app.route("/accounts/new", methods=["POST"])
 def accounts_new():
-    print(request.form)
     username, firstname, lastname, password1, password2 = request.form.values()
     error = []
 
@@ -45,11 +49,12 @@ def accounts_new():
         error.append("Passwords did not match.")
     if not username:
         error.append("Username can't be empty")
-
+    if get_account_by_username(username):
+        error.append("Username is use")
     if not error:
         create_user(username, firstname, lastname, password1)
         flash("User created.")
-        return redirect("/")
+        return redirect(request.referrer or "/")
 
     return render_template(
         "accounts_new.html",
