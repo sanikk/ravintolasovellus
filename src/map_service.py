@@ -5,7 +5,17 @@ from db_module import get_restaurants_all
 def get_map():
     map_location = (60.165, 24.94)
     m = folium.Map(location=map_location, zoom_start=14, tiles="cartodbpositron")
-    for restaurant_id, name, lat, lng in get_restaurants_all():
+    for (
+        restaurant_id,
+        name,
+        admin_id,
+        lat,
+        lng,
+        place_id,
+        address,
+    ) in get_restaurants_all():
+        if not lat or lng:
+            continue
         folium.Marker(
             location=[lat, lng],
             tooltip=name,
