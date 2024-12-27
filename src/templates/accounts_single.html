@@ -1,6 +1,35 @@
 {% extends "layout.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}Single account page{% endblock %}
 {% block content %}
-<h2>Home</h2>
+<h2>{{ account.firstname }} {{account.lastname}}</h2>
 <p>Best restaurant app in the business!</p>
+
+<p> This is the account page of {{account.firstname}} {{account.lastname}}<p>
+{% if restaurants or events %}
+<p>They currently administer the following.<p>
+{% endif %}
+{% if restaurants %}
+<p>Restaurants:<p>
+<ul>
+    {% for restaurant in restaurants %}
+    <li>{{restaurant}}<li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% if events %}
+<p>Events<p>
+<ul>
+    {% for event in events %}
+    <li>{{event}}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% if ratings %}
+<p>They have written the following reviews<p>
+<ul>
+    {% for rating in ratings %}
+    <li>{{rating}}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% endblock %}

@@ -25,8 +25,7 @@ def check_username_and_password(username: str, password: str):
     if not user:
         return None
     if check_password_hash(user.password, password):
-        print(f"{user=}")
-        return (user[0], user[1], user[3] or user[4])
+        return (user.id, user.username, user.firstname or user.lastname)
     return None
 
 
@@ -36,13 +35,17 @@ def get_accounts_all():
 
 
 def get_account_by_username(username: str):
-    sql = "SELECT * FROM accounts WHERE username = :username"
-    return db.session.execute(text(sql), {"username": username})
+    sql = (
+        "SELECT id,username,firstname,lastname FROM accounts WHERE username = :username"
+    )
+    user = db.session.execute(text(sql), {"username": username}).fetchone()
+    return user
 
 
 def get_account_by_user_id(user_id: int):
-    sql = "SELECT * FROM accounts WHERE id = :user_id"
-    return db.session.execute(text(sql), {"user_id": user_id})
+    sql = "SELECT id, username, firstname, lastname FROM accounts WHERE id = :user_id"
+    user = db.session.execute(text(sql), {"user_id": user_id}).fetchone()
+    return user
 
 
 def get_restaurants_all():
