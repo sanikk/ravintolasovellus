@@ -1,0 +1,23 @@
+form {
+    max-width: 600px; 
+    gap: 15px;
+}
+.flabel {
+    float: left; 
+    text-align: right; 
+    width: 25%;
+}
+
+.finput {
+    width:65%;
+}
+
+.fbutton {
+    display: block;
+    margin: auto;
+}
+
+#flash_message {
+    font-size: 2em;
+    color: #00ba37;
+}

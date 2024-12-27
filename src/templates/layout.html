@@ -1,16 +1,29 @@
 <!DOCTYPE html>
+<head>
 <title>
     {% block title %}{% endblock %} - RestaurantApp
 </title>
 <h1>
     Restaurantapp
 </h1>
+<link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div id="flash_message">{{messages[0]}}</div>
+    {% endif %}
+{% endwith %}
 <nav style="white-space: nowrap;">
     <div style="float: left;">
         <a href="/">Front page</a>
         <a href="/restaurants">Restaurants</a>
         <a href="/ratings">Reviews</a>
+        {% if session.username == 'Administrator' %}
         <a href="/accounts">Accounts</a>
+        {% elif session.user_id %}
+        <a href="/accounts/{session.user_id}">My account</a>
+        {% endif %}
     </div>
     <div style="float: right;">
         {% if session.screenname %}
@@ -21,7 +34,7 @@
                 Username: <input type="text" name="username"> Password: <input type="text" name="password">
                 <button type="submit">Login</button>
             </form>
-            or <a href="/accounts/new">Register</a>
+            or <a href="/accounts/registration">Register</a>
         {% endif %}
     </div>
 </nav>
@@ -30,3 +43,10 @@
 {% block content %} {% endblock %}
 <hr>
 © 2024 Samuli Nikkilä
+<script>
+const elem = document.getElementById('flash_message');
+if (elem) {
+    setTimeout(() => elem.style.display = 'none', 5000);
+}
+</script>
+</body>
