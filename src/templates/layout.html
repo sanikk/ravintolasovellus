@@ -4,7 +4,7 @@
     {% block title %}{% endblock %} - RestaurantApp
 </title>
 <h1>
-    Restaurantapp
+    RestaurantApp
 </h1>
 <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
@@ -25,12 +25,12 @@
         {% if session.username == 'Administrator' %}
         <a href="/accounts">Accounts</a>
         {% elif session.user_id %}
-        <a href="/accounts/{session.user_id}">My account</a>
+            <a href="/accounts/{{session.user_id}}">My account</a>
         {% endif %}
     </div>
     <div style="float: right;">
         {% if session.screenname %}
-            You are logged in as {session.screenname}
+            You are logged in as {{session.screenname}}
             <a href="/accounts/logout">(Logout)</a>
         {% else %}
             <form action="/accounts/login" method="POST" style="display: inline;">

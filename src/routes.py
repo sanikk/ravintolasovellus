@@ -64,11 +64,11 @@ def login_user():
     password = request.form["password"]
     ret = check_username_and_password(username, password)
     if not ret:
-        return redirect("/")
+        return redirect(request.referrer or "/")
+    print(f"{ret=}")
+    # session["user_id"] = ret.user_id
     session["user_id"], session["username"], session["screenname"] = ret
-    # return redirect(url_for("accounts", user_id=session["user_id"]))
-    # return redirect(url_for("accounts", user_id=ret[0]))
-    return redirect("/")
+    return redirect(request.referrer or "/")
 
 
 @app.route("/restaurants")

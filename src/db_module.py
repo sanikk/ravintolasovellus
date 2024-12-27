@@ -23,13 +23,11 @@ def check_username_and_password(username: str, password: str):
     sql = "SELECT id, username, password, firstname, lastname FROM accounts WHERE username=:username"
     user = db.session.execute(text(sql), {"username": username}).fetchone()
     if not user:
-        # TODO: show error to user
-        return
+        return None
     if check_password_hash(user.password, password):
-        # TODO: great success!
-        return id, user.username, user.firstname or user.lastname
-    # TODO: inform user of failure
-    return
+        print(f"{user=}")
+        return (user[0], user[1], user[3] or user[4])
+    return None
 
 
 def get_accounts_all():
