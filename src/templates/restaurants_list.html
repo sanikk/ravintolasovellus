@@ -4,9 +4,9 @@
 <h2>Restaurants</h2>
 <p>Best restaurant app in the business!</p>
 <ul>
-    {% for restaurant_id, name, lat, lng in restaurants %}
+    {% for restaurant in restaurants %}
         <li>
-            <a href="/restaurants/{{ restaurant_id }}">{{ name }}</a>
+            <a href="/restaurants/{{ restaurant.id }}">{{ restaurant.name }}</a>
         </li>
     {% endfor %}
 </ul>

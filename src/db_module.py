@@ -5,7 +5,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 
 def create_user(username: str, firstname: str, lastname: str, password: str):
-    sql = "INSERT INTO accounts (username, firstname, lastname, password) VALUES (:username, :firstname, :lastname, :password)"
+    sql = "INSERT INTO accounts (username, firstname, lastname, password) VALUES (:username, :firstname, :lastname, :password) RETURNING id"
     le_hash = generate_password_hash(password)
     ret = db.session.execute(
         text(sql),
@@ -17,6 +17,7 @@ def create_user(username: str, firstname: str, lastname: str, password: str):
         },
     )
     db.session.commit()
+    return ret.scalar()
 
 
 def check_username_and_password(username: str, password: str):
@@ -58,19 +59,18 @@ def get_restaurants_single(restaurant_id: int):
     return db.session.execute(text(sql), {"restaurant_id": restaurant_id}).fetchone()
 
 
-#        id SERIAL PRIMARY KEY,
-#        name TEXT,
-#        admin_id INTEGER REFERENCES accounts(id),
-#        latitude FLOAT,
-#        longitude FLOAT,
-#        place_id TEXT,
-#        address TEXT
-
-
-def create_restaurant(name, admin_id, address):
-    sql = "INSERT INTO restaurants (name, admin_id, address) VALUES (:name, :admin_id, :address) RETURNING id"
+def create_restaurant(name, admin_id, address, lat: float, long: float, place_id: int):
+    sql = "INSERT INTO restaurants (name, admin_id, address, latitude, longitude, place_id) VALUES (:name, :admin_id, :address, :lat, :long, :place_id) RETURNING id"
     ret = db.session.execute(
-        text(sql), {"name": name, "admin_id": admin_id, "address": address}
+        text(sql),
+        {
+            "name": name,
+            "admin_id": admin_id,
+            "address": address,
+            "lat": lat,
+            "long": long,
+            "place_id": place_id,
+        },
     )
     db.session.commit()
     return ret.scalar()
