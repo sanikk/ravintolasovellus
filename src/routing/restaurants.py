@@ -3,10 +3,6 @@ from app import app
 from service.helper_service import add_restaurant
 from db_module import get_restaurants_all, get_restaurants_by_id
 
-#####################################
-# RESTAURANTS                       #
-#####################################
-
 
 @app.route("/restaurants")
 def restaurants():
@@ -20,12 +16,12 @@ def single_restaurant(restaurant_id):
 
 
 @app.route("/restaurants/new")
-def new_restaurant_page():
+def create_restaurant_form():
     return render_template("restaurants_new.html")
 
 
 @app.route("/restaurants/create", methods=["POST"])
-def new_restaurant():
+def create_restaurant_endpoint():
     if not session["user_id"]:
         flash("Error: You are not logged in.")
         return redirect(request.referrer or "/restaurants/new")

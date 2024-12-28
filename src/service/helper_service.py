@@ -1,4 +1,9 @@
-from db_module import create_restaurant, create_user, get_account_by_username
+from db_module import (
+    create_restaurant,
+    create_user,
+    get_account_by_username,
+    get_restaurants_all,
+)
 from service.convert_address import get_lat_long_placeid
 
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -58,3 +63,8 @@ def check_username_and_password(username: str, password: str):
     if check_password_hash(user.password, password):
         return (user.id, user.username, user.firstname or user.lastname)
     return None
+
+
+def get_map_data():
+    restaurants = get_restaurants_all()
+    return [(r.id, r.name, r.latitude, r.longitude) for r in restaurants]
