@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block title %}Event list{% endblock %}
+{% block content %}
+<h2>Add new Event</h2>
+<p>Add your Best Event to the Best Restaurant App in the business!</p>
+<form action="/events/create" method="POST">
+    <label class="flabel">Event Name</label> <input class="finput" type="text" name="name"><br>
+    <label class="flabel">Event Venue</label> <select class="finput" name="venue">
+    {% for restaurant in restaurants %}
+        <option value="{{restaurant.id}}">{{restaurant.name}}</option>
+    {% endfor %}
+    </select>
+    <label class="flabel">Event Date</label> <input class="finput" type="date" name="date">
+    <button class="fbutton" type="submit">Submit</button>
+</form>
+
+
+{% endblock %}

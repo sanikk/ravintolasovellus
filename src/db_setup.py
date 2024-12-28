@@ -15,7 +15,6 @@ def drop_tables():
     table_list = [
         "speciality_restaurants",
         "specialities",
-        "event_dates",
         "events",
         "buffets",
         "ratings",
@@ -68,6 +67,7 @@ def create_tables():
     sql = """CREATE TABLE IF NOT EXISTS events (
         id SERIAL PRIMARY KEY,
         name TEXT,
+        event_date DATE,
         restaurant_id INTEGER REFERENCES restaurants(id),
         posted_on TIMESTAMPTZ DEFAULT NOW(),
         account_id INTEGER REFERENCES accounts(id)
@@ -77,13 +77,6 @@ def create_tables():
     sql = """CREATE TABLE IF NOT EXISTS buffets (
         id SERIAL PRIMARY KEY,
         restaurant_id INTEGER REFERENCES restaurants(id)
-    )"""
-    cur.execute(sql)
-
-    sql = """CREATE TABLE IF NOT EXISTS event_dates (
-        id SERIAL PRIMARY KEY,
-        event_id INTEGER REFERENCES events(id),
-        event_date TIMESTAMPTZ
     )"""
     cur.execute(sql)
 

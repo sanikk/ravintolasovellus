@@ -1,3 +1,4 @@
+from datetime import date
 from app import db
 from sqlalchemy import text
 
@@ -31,6 +32,12 @@ def get_account_by_username(username: str):
     sql = (
         "SELECT id,username,firstname,lastname FROM accounts WHERE username = :username"
     )
+    user = db.session.execute(text(sql), {"username": username}).fetchone()
+    return user
+
+
+def get_account_with_password_by_username(username: str):
+    sql = "SELECT id,username,password,firstname,lastname FROM accounts WHERE username = :username"
     user = db.session.execute(text(sql), {"username": username}).fetchone()
     return user
 
@@ -108,6 +115,26 @@ def get_events_all():
     return db.session.execute(text(sql)).fetchall()
 
 
+def get_events_by_id(event_id: int):
+    sql = "SELECT * FROM events WHERE id=:event_id"
+    return db.session.execute(text(sql), {"event_id": event_id}).fetchone()
+
+
 def get_events_by_account_id(account_id: int):
     sql = "SELECT * FROM EVENTS WHERE account_id = :account_id"
     return db.session.execute(text(sql), {"account_id": account_id}).fetchall()
+
+
+def create_event(name: str, restaurant_id: int, event_date: date, account_id: int):
+    sql = "INSERT INTO events (name, restaurant_id, event_date, account_id) VALUES (:name, :restaurant_id, :event_date, :account_id) RETURNING id"
+    ret = db.session.execute(
+        text(sql),
+        {
+            "name": name,
+            "restaurant_id": restaurant_id,
+            "event_date": event_date,
+            "account_id": account_id,
+        },
+    )
+    db.session.commit()
+    return ret.scalar()

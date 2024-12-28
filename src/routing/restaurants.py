@@ -22,15 +22,15 @@ def create_restaurant_form():
 
 @app.route("/restaurants/create", methods=["POST"])
 def create_restaurant_endpoint():
-    if not session["user_id"]:
+    if "user_id" not in session or not session["user_id"]:
         flash("Error: You are not logged in.")
-        return redirect(request.referrer or "/restaurants/new")
+        return redirect("/restaurants/new")
     admin_id = session["user_id"]
     new_index, error = add_restaurant(
         admin_id=admin_id, name=request.form["name"], address=request.form["address"]
     )
     if error or not str(new_index).isnumeric or new_index < 1:
         [flash(f"Error: {err}") for err in error]
-        return render_template("/restaurants/new")
+        return redirect("/restaurants/new")
     flash("Success: Restaurant created.")
     return redirect(f"/restaurants/{new_index}")

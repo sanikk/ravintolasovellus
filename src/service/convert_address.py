@@ -12,10 +12,11 @@ def get_lat_long_placeid(street_address: str):
     headers = {"User-Agent": "MyRestaurantApp/1.0 (sanikk@users.noreply.github.com)"}
     response = requests.get(url, params=params, headers=headers)
     if response.status_code != 200:
-        print(response.text)
-        exit()
+        # print(response.text)
+        # exit()
+        return None, None, None
     data = response.json()
     if data:
-        print(data)
+        # print(data)
         return float(data[0]["lat"]), float(data[0]["lon"]), int(data[0]["place_id"])
     return None, None, None

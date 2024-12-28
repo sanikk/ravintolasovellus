@@ -73,6 +73,13 @@ def login_user():
     if not ret:
         flash("Error: Login failed.")
         return redirect(request.referrer or "/")
-    session["user_id"], session["username"], session["screenname"] = ret
+    session["user_id"], session["screenname"] = ret
     flash("Success: Login was succesful.")
+    return redirect(request.referrer or "/")
+
+
+@app.route("/accounts/logout")
+def logout_user():
+    del session["user_id"]
+    del session["screenname"]
     return redirect(request.referrer or "/")
