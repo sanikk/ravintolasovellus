@@ -1,33 +1,25 @@
 from app import db
 from sqlalchemy import text
 
-from werkzeug.security import check_password_hash, generate_password_hash
+
+#################################
+# ACCOUNTS                      #
+#################################
 
 
-def create_user(username: str, firstname: str, lastname: str, password: str):
+def create_user(username: str, firstname: str, lastname: str, password_hash: str):
     sql = "INSERT INTO accounts (username, firstname, lastname, password) VALUES (:username, :firstname, :lastname, :password) RETURNING id"
-    le_hash = generate_password_hash(password)
     ret = db.session.execute(
         text(sql),
         {
             "username": username,
             "firstname": firstname,
             "lastname": lastname,
-            "password": le_hash,
+            "password": password_hash,
         },
     )
     db.session.commit()
     return ret.scalar()
-
-
-def check_username_and_password(username: str, password: str):
-    sql = "SELECT id, username, password, firstname, lastname FROM accounts WHERE username=:username"
-    user = db.session.execute(text(sql), {"username": username}).fetchone()
-    if not user:
-        return None
-    if check_password_hash(user.password, password):
-        return (user.id, user.username, user.firstname or user.lastname)
-    return None
 
 
 def get_accounts_all():
@@ -49,14 +41,24 @@ def get_account_by_user_id(user_id: int):
     return user
 
 
+#####################################
+# RESTAURANTS                       #
+#####################################
+
+
 def get_restaurants_all():
     sql = "SELECT * FROM restaurants"
     return db.session.execute(text(sql)).fetchall()
 
 
-def get_restaurants_single(restaurant_id: int):
-    sql = "SELECT name, latitude, longitude, place_id, address FROM restaurants WHERE id = :restaurant_id"
+def get_restaurants_by_id(restaurant_id: int):
+    sql = "SELECT id, name, admin_id, latitude, longitude, place_id, address FROM restaurants WHERE id = :restaurant_id"
     return db.session.execute(text(sql), {"restaurant_id": restaurant_id}).fetchone()
+
+
+def get_restaurants_by_admin_id(admin_id: int):
+    sql = "SELECT id, name, admin_id, latitude, longitude, place_id, address FROM restaurants WHERE admin_id = :admin_id"
+    return db.session.execute(text(sql), {"admin_id": admin_id}).fetchall()
 
 
 def create_restaurant(name, admin_id, address, lat: float, long: float, place_id: int):
@@ -76,11 +78,36 @@ def create_restaurant(name, admin_id, address, lat: float, long: float, place_id
     return ret.scalar()
 
 
+#############################################
+#   RATINGS                                 #
+#############################################
+
+
 def get_ratings_all():
     sql = "SELECT * FROM ratings"
     return db.session.execute(text(sql)).fetchall()
 
 
-def get_ratings_single(rating_id: int):
+def get_ratings_by_id(rating_id: int):
     sql = "SELECT * FROM ratings WHERE id = :rating_id"
     return db.session.execute(text(sql), {"rating_id": rating_id}).fetchone()
+
+
+def get_ratings_by_account_id(account_id: int):
+    sql = "SELECT * FROM ratings WHERE account_id = :account_id"
+    return db.session.execute(text(sql), {"account_id": account_id}).fetchall()
+
+
+#################################################
+# EVENTS                                        #
+#################################################
+
+
+def get_events_all():
+    sql = "SELECT * FROM events"
+    return db.session.execute(text(sql)).fetchall()
+
+
+def get_events_by_account_id(account_id: int):
+    sql = "SELECT * FROM EVENTS WHERE account_id = :account_id"
+    return db.session.execute(text(sql), {"account_id": account_id}).fetchall()

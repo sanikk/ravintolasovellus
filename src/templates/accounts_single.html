@@ -5,27 +5,31 @@
 <p>Best restaurant app in the business!</p>
 
 <p> This is the account page of {{account.firstname}} {{account.lastname}}<p>
+
 {% if restaurants or events %}
 <p>They currently administer the following.<p>
 {% endif %}
+
 {% if restaurants %}
-<p>Restaurants:<p>
+<h4>Restaurants:</h4>
 <ul>
     {% for restaurant in restaurants %}
-    <li>{{restaurant}}<li>
+        <li><a href="/restaurants/{{restaurant.id}}">{{restaurant.name}} at {{restaurant.address}}<li>
     {% endfor %}
 </ul>
 {% endif %}
+
 {% if events %}
-<p>Events<p>
+<h4>Events</h4>
 <ul>
     {% for event in events %}
     <li>{{event}}</li>
     {% endfor %}
 </ul>
 {% endif %}
+
 {% if ratings %}
-<p>They have written the following reviews<p>
+<h4>They have written the following reviews</h4>
 <ul>
     {% for rating in ratings %}
     <li>{{rating}}</li>

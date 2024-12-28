@@ -1,6 +1,8 @@
 from db_module import create_restaurant, create_user, get_account_by_username
 from service.convert_address import get_lat_long_placeid
 
+from werkzeug.security import check_password_hash, generate_password_hash
+
 
 def add_restaurant(admin_id: int, name: str, address: str):
     error = []
@@ -32,16 +34,27 @@ def add_user(
     username: str, firstname: str, lastname: str, password1: str, password2: str
 ):
 
-    errors = []
+    error = []
     if password1 != password2:
-        errors.append("Error: Passwords did not match.")
+        error.append("Error: Passwords did not match.")
     if not username:
-        errors.append("Error: Username can't be empty")
+        error.append("Error: Username can't be empty")
     if get_account_by_username(username):
-        errors.append("Error: Username is use")
-    if not errors:
-        ret = create_user(username, firstname, lastname, password1)
+        error.append("Error: Username is use")
+    if not error:
+        ret = create_user(
+            username, firstname, lastname, generate_password_hash(password1)
+        )
         if ret:
             return ret, ["Success: User created."]
-        errors.append("Error: There was an error creating user.")
-    return -1, errors
+        error.append("Error: There was an error creating user.")
+    return -1, error
+
+
+def check_username_and_password(username: str, password: str):
+    user = get_account_by_username(username)
+    if not user:
+        return None
+    if check_password_hash(user.password, password):
+        return (user.id, user.username, user.firstname or user.lastname)
+    return None

@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %}Reviews{% endblock %}
+{% block content %}
+<h2>Reviews</h2>
+<p>Best restaurant app in the business!</p>
+<ul>
+    {% for rat in ratings %}
+        <li>
+            <a href="/ratings/{{ rat[0] }}">{{ rat }}</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
