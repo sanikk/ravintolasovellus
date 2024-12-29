@@ -2,10 +2,12 @@ from psycopg import connect
 from psycopg.sql import SQL, Identifier
 from src.config import DATABASE_NAME
 
+from werkzeug.security import generate_password_hash
+
 
 def get_connection():
-    print(f"{DATABASE_NAME=}")
     conn = connect(f"dbname={DATABASE_NAME}")
+    print(f"Connected to {DATABASE_NAME=}")
     cur = conn.cursor()
     return conn, cur
 
@@ -22,12 +24,12 @@ def drop_tables():
         "accounts",
     ]
     for table in table_list:
-        # sql = """DROP TABLE IF EXISTS %s"""
         sql = SQL("DROP TABLE IF EXISTS {}").format(Identifier(table))
         cur.execute(sql)
     conn.commit()
     cur.close()
     conn.close()
+    print("Database had been cleaned.")
 
 
 def create_tables():
@@ -92,6 +94,19 @@ def create_tables():
     )"""
     cur.execute(sql)
 
+    #     ADMIN_USERNAME = input("Please enter an admin username: ")
+    #     ADMIN_PASSWORD = input("Please enter an admin password: ")
+    #     if (
+    #         ADMIN_USERNAME
+    #         and ADMIN_PASSWORD
+    #         and 4 < len(ADMIN_USERNAME) < 17
+    #         and 4 < len(ADMIN_PASSWORD) < 33
+    #     ):
+    #         cur.execute(
+    #             """INSERT INTO account (username, password) VALUES (%s, %s)""",
+    #             (ADMIN_USERNAME, generate_password_hash(ADMIN_PASSWORD)),
+    #         )
+    print("Database has been built")
     conn.commit()
     cur.close()
     conn.close()

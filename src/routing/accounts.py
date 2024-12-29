@@ -14,15 +14,19 @@ from service.helper_service import add_user, check_username_and_password
 # ACCOUNTS                      #
 #################################
 
+# Yeah not setting up real access control for admin account here. We can use psql.
 
-@app.route("/accounts")
-def accounts():
-    accounts_list = get_accounts_all()
-    return render_template("accounts_list.html", accounts=accounts_list)
+# @app.route("/accounts")
+# def accounts():
+#     accounts_list = get_accounts_all()
+#     return render_template("accounts_list.html", accounts=accounts_list)
 
 
 @app.route("/accounts/<int:user_id>")
 def accounts_single(user_id: int):
+    if session["user_id"] != user_id:
+        flash("Error: You are not logged in as the owner of this account.")
+        return redirect("/")
     account = get_account_by_user_id(user_id)
     restaurants = get_restaurants_by_admin_id(user_id)
     events = get_events_by_account_id(user_id)

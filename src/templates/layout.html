@@ -23,9 +23,7 @@
         <a href="/restaurants">Restaurants</a>
         <a href="/events">Events</a>
         <a href="/ratings">Reviews</a>
-        {% if session.username == 'Administrator' %}
-        <a href="/accounts">Accounts</a>
-        {% elif session.user_id %}
+        {% if session.user_id %}
             <a href="/accounts/{{session.user_id}}">My account</a>
         {% endif %}
     </div>

@@ -1,7 +1,13 @@
 {% extends "layout.html" %}
 {% block title %}{{ name }}{% endblock %}
 {% block content %}
-<h2>{{ name }}</h2>
-<p>{{ name }} at {{ address }} [{{ lat }}, {{ lng }}] is very nice!</p>
+<h2>{{ restaurant.name }}</h2>
+<p>{{ restaurant.name }} at {{ restaurant.address }} [{{ restaurant.latitude }}, {{ restaurant.longitude }}] is very nice!</p>
 
+{% if session.user_id == restaurant.admin_id %}
+<form action="/" method="GET"> 
+<button formaction="/restaurants/delete/{{restaurant.id}}" formmethod="POST">Delete</button>
+<button formaction="/restaurants/edit/{{restaurant.id}}" formmethod="GET">Edit details</button>
+</form>
+{% endif %}
 {% endblock %}
