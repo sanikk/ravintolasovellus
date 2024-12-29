@@ -7,7 +7,7 @@ from src.config import DATABASE_NAME
 
 def get_connection():
     conn = connect(f"dbname={DATABASE_NAME}")
-    print(f"Connected to {DATABASE_NAME=}")
+    print(f"Connected to {DATABASE_NAME}")
     cur = conn.cursor()
     return conn, cur
 

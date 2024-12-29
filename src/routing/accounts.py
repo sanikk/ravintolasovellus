@@ -86,6 +86,5 @@ def login_user():
 
 @app.route("/accounts/logout")
 def logout_user():
-    del session["user_id"]
-    del session["screenname"]
+    session.clear()
     return redirect(request.referrer or "/")

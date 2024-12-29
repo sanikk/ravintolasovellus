@@ -9,7 +9,8 @@ from sqlalchemy import text
 
 
 def create_user(username: str, firstname: str, lastname: str, password_hash: str):
-    # TODO: check these exist and return some invalid value if not
+    if not (username and password_hash):
+        return None
     sql = "INSERT INTO accounts (username, firstname, lastname, password) VALUES (:username, :firstname, :lastname, :password) RETURNING id"
     ret = db.session.execute(
         text(sql),
@@ -62,7 +63,7 @@ def get_restaurants_all():
 
 
 def get_restaurants_by_id(restaurant_id: int):
-    sql = "SELECT id, name, admin_id, latitude, longitude, place_id, address FROM restaurants WHERE id = :restaurant_id"
+    sql = "SELECT id, name, account_id, latitude, longitude, place_id, address FROM restaurants WHERE id = :restaurant_id"
     return db.session.execute(text(sql), {"restaurant_id": restaurant_id}).fetchone()
 
 
@@ -74,6 +75,8 @@ def get_restaurants_by_account_id(account_id: int):
 def create_restaurant(
     name: str, account_id: int, address: str, lat: float, long: float, place_id: int
 ):
+    if not (name and account_id and address and lat and long and place_id):
+        return None
     sql = "INSERT INTO restaurants (name, account_id, address, latitude, longitude, place_id) VALUES (:name, :account_id, :address, :lat, :long, :place_id) RETURNING id"
     ret = db.session.execute(
         text(sql),
@@ -131,6 +134,8 @@ def get_events_by_account_id(account_id: int):
 
 
 def create_event(name: str, restaurant_id: int, event_date: date, account_id: int):
+    if not (name and account_id):
+        return None
     sql = "INSERT INTO events (name, restaurant_id, event_date, account_id) VALUES (:name, :restaurant_id, :event_date, :account_id) RETURNING id"
     ret = db.session.execute(
         text(sql),

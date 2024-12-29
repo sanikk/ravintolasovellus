@@ -14,7 +14,7 @@
 <h4>Restaurants:</h4>
 <ul>
     {% for restaurant in restaurants %}
-        <li><a href="/restaurants/{{restaurant.id}}">{{restaurant.name}} at {{restaurant.address}}<li>
+    <li><a href="/restaurants/{{restaurant.id}}">{{restaurant.name}}</a> at {{restaurant.address}}</li>
     {% endfor %}
 </ul>
 {% endif %}
