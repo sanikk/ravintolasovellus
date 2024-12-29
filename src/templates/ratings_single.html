@@ -1,4 +1,11 @@
 {% extends "layout.html" %}
 {% block title %}Single Rating Page{% endblock %}
 {% block content %}
+
+{% if session.user_id == rating.account_id %}
+<form action="/" method="GET"> 
+<button formaction="/restaurants/delete/{{rating.id}}" formmethod="POST">Delete</button>
+<button formaction="/restaurants/edit/{{rating.id}}" formmethod="GET">Edit details</button>
+</form>
+{% endif %}
 {% endblock %}

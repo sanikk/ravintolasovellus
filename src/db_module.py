@@ -9,6 +9,7 @@ from sqlalchemy import text
 
 
 def create_user(username: str, firstname: str, lastname: str, password_hash: str):
+    # TODO: check these exist and return some invalid value if not
     sql = "INSERT INTO accounts (username, firstname, lastname, password) VALUES (:username, :firstname, :lastname, :password) RETURNING id"
     ret = db.session.execute(
         text(sql),
@@ -42,9 +43,11 @@ def get_account_with_password_by_username(username: str):
     return user
 
 
-def get_account_by_user_id(user_id: int):
-    sql = "SELECT id, username, firstname, lastname FROM accounts WHERE id = :user_id"
-    user = db.session.execute(text(sql), {"user_id": user_id}).fetchone()
+def get_account_by_id(account_id: int):
+    sql = (
+        "SELECT id, username, firstname, lastname FROM accounts WHERE id = :account_id"
+    )
+    user = db.session.execute(text(sql), {"account_id": account_id}).fetchone()
     return user
 
 
@@ -63,18 +66,20 @@ def get_restaurants_by_id(restaurant_id: int):
     return db.session.execute(text(sql), {"restaurant_id": restaurant_id}).fetchone()
 
 
-def get_restaurants_by_admin_id(admin_id: int):
-    sql = "SELECT id, name, admin_id, latitude, longitude, place_id, address FROM restaurants WHERE admin_id = :admin_id"
-    return db.session.execute(text(sql), {"admin_id": admin_id}).fetchall()
+def get_restaurants_by_account_id(account_id: int):
+    sql = "SELECT id, name, account_id, latitude, longitude, place_id, address FROM restaurants WHERE account_id = :account_id"
+    return db.session.execute(text(sql), {"account_id": account_id}).fetchall()
 
 
-def create_restaurant(name, admin_id, address, lat: float, long: float, place_id: int):
-    sql = "INSERT INTO restaurants (name, admin_id, address, latitude, longitude, place_id) VALUES (:name, :admin_id, :address, :lat, :long, :place_id) RETURNING id"
+def create_restaurant(
+    name: str, account_id: int, address: str, lat: float, long: float, place_id: int
+):
+    sql = "INSERT INTO restaurants (name, account_id, address, latitude, longitude, place_id) VALUES (:name, :account_id, :address, :lat, :long, :place_id) RETURNING id"
     ret = db.session.execute(
         text(sql),
         {
             "name": name,
-            "admin_id": admin_id,
+            "account_id": account_id,
             "address": address,
             "lat": lat,
             "long": long,

@@ -2,7 +2,7 @@ from psycopg import connect
 from psycopg.sql import SQL, Identifier
 from src.config import DATABASE_NAME
 
-from werkzeug.security import generate_password_hash
+# from werkzeug.security import generate_password_hash
 
 
 def get_connection():
@@ -40,15 +40,14 @@ def create_tables():
         username TEXT UNIQUE,
         firstname TEXT,
         lastname TEXT,
-        password TEXT,
-        role INTEGER
+        password TEXT
     )"""
     cur.execute(sql)
 
     sql = """CREATE TABLE IF NOT EXISTS restaurants (
         id SERIAL PRIMARY KEY,
         name TEXT,
-        admin_id INTEGER REFERENCES accounts(id),
+        account_id INTEGER REFERENCES accounts(id),
         latitude FLOAT,
         longitude FLOAT,
         place_id TEXT,

@@ -3,8 +3,8 @@ from app import app
 
 from db_module import (
     get_accounts_all,
-    get_account_by_user_id,
-    get_restaurants_by_admin_id,
+    get_account_by_id,
+    get_restaurants_by_account_id,
     get_events_by_account_id,
     get_ratings_by_account_id,
 )
@@ -22,15 +22,15 @@ from service.helper_service import add_user, check_username_and_password
 #     return render_template("accounts_list.html", accounts=accounts_list)
 
 
-@app.route("/accounts/<int:user_id>")
-def accounts_single(user_id: int):
-    if session["user_id"] != user_id:
+@app.route("/accounts/<int:account_id>")
+def accounts_single(account_id: int):
+    if session["user_id"] != account_id:
         flash("Error: You are not logged in as the owner of this account.")
         return redirect("/")
-    account = get_account_by_user_id(user_id)
-    restaurants = get_restaurants_by_admin_id(user_id)
-    events = get_events_by_account_id(user_id)
-    ratings = get_ratings_by_account_id(user_id)
+    account = get_account_by_id(account_id)
+    restaurants = get_restaurants_by_account_id(account_id)
+    events = get_events_by_account_id(account_id)
+    ratings = get_ratings_by_account_id(account_id)
     return render_template(
         "accounts_single.html",
         account=account,
@@ -62,6 +62,8 @@ def accounts_new():
     )
     [flash(message) for message in messages]
     if str(new_index).isnumeric and new_index > 0:
+        session["user_id"] = new_index
+        session["screenname"] = firstname or lastname or username
         return redirect(f"/accounts/{new_index}")
     return render_template(
         "accounts_new.html",

@@ -2,4 +2,11 @@
 {% block title %}Single Event Page{% endblock %}
 {% block content %}
 {{ event }}
+
+{% if session.user_id == event.account_id %}
+<form action="/" method="GET"> 
+<button formaction="/events/delete/{{event.id}}" formmethod="POST">Delete</button>
+<button formaction="/events/edit/{{event.id}}" formmethod="GET">Edit details</button>
+</form>
+{% endif %}
 {% endblock %}

@@ -25,12 +25,14 @@ def create_restaurant_endpoint():
     if "user_id" not in session or not session["user_id"]:
         flash("Error: You are not logged in.")
         return redirect("/restaurants/new")
-    admin_id = session["user_id"]
+    account_id = session["user_id"]
     new_index, error = add_restaurant(
-        admin_id=admin_id, name=request.form["name"], address=request.form["address"]
+        account_id=account_id,
+        name=request.form["name"],
+        address=request.form["address"],
     )
     if error or not str(new_index).isnumeric or new_index < 1:
-        [flash(f"Error: {err}") for err in error]
+        [flash(f"{err}") for err in error]
         return redirect("/restaurants/new")
     flash("Success: Restaurant created.")
     return redirect(f"/restaurants/{new_index}")
