@@ -2,11 +2,10 @@ from flask import render_template, request, redirect, session, flash
 from app import app
 
 from db_module import (
-    get_accounts_all,
     get_account_by_id,
-    get_restaurants_by_account_id,
-    get_events_by_account_id,
-    get_ratings_by_account_id,
+    get_restaurants_by_accountId,
+    get_events_by_accountId,
+    get_ratings_by_accountId,
 )
 from service.helper_service import add_user, check_username_and_password
 
@@ -28,9 +27,9 @@ def accounts_single(account_id: int):
         flash("Error: You are not logged in as the owner of this account.")
         return redirect("/")
     account = get_account_by_id(account_id)
-    restaurants = get_restaurants_by_account_id(account_id)
-    events = get_events_by_account_id(account_id)
-    ratings = get_ratings_by_account_id(account_id)
+    restaurants = get_restaurants_by_accountId(account_id)
+    events = get_events_by_accountId(account_id)
+    ratings = get_ratings_by_accountId(account_id)
     return render_template(
         "accounts_single.html",
         account=account,

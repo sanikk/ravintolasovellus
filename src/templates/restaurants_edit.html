@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}Restaurants{% endblock %}
+{% block content %}
+<h2>Add new Restaurant</h2>
+<p>Edit your Best Restaurant in the Best Restaurant App in the business!</p>
+<form action="/restaurants/update/{{restaurant_id}}" method="POST">
+    <label class="flabel">Restaurant Name</label> <input class="finput" type="text" name="name" value="{{ form_data.get("name", "") }}">
+    <label class="flabel">Restaurant Address</label> <input class="finput" type="text" name="address" value="{{ form_data.get("address","") }}">
+    <label class="flabel">Restaurant city</label> Helsinki<br>
+    <row class="fbutton">
+        <button formaction="/restaurants/{{restaurant_id}}" formmethod="GET">Cancel</button>
+        <button type="submit">Submit</button>
+    </row>
+</form>
+<br>
+<p>If there has been a change of ownership please contact site administrator.<br>
+    For security reasons we will not provide a list of accounts to users.</p>
+
+{% endblock %}

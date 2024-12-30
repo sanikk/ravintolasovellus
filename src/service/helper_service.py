@@ -1,48 +1,15 @@
 from datetime import date, timedelta
 from db_module import (
-    create_restaurant,
     create_user,
     create_event,
     get_account_by_id,
     get_account_by_username,
-    get_account_with_password_by_username,
+    get_accountWithPassword_by_username,
     get_restaurants_all,
     get_restaurants_by_id,
 )
-from service.convert_address import get_lat_long_placeid
 
 from werkzeug.security import check_password_hash, generate_password_hash
-
-
-def add_restaurant(account_id: int, name: str, address: str):
-    error = []
-    if (
-        not account_id
-        or not account_id.is_integer()
-        or account_id < 1
-        or not get_account_by_id(account_id)
-    ):
-        error.append("Error: Invalid account_id.")
-    if not name or not 3 < len(name) < 65:
-        error.append("Error: Restaurant needs a name with 4-64 characters.")
-    if not address or not 3 < len(address) < 65:
-        error.append("Error: Restaurant needs an address, with 4-64 characters.")
-    lat, long, place_id = get_lat_long_placeid(address)
-    if not lat or not long or not place_id:
-        error.append("Error: There was an error resolving the address.")
-    if not error and lat and long and place_id:
-        ret = create_restaurant(
-            name=name,
-            account_id=account_id,
-            address=address,
-            lat=lat,
-            long=long,
-            place_id=place_id,
-        )
-        if ret:
-            return ret, error
-        error.append("Error: There was no return index. Something went wrong?")
-    return -1, error
 
 
 def add_user(
@@ -94,7 +61,7 @@ def add_event(name: str, restaurant_id_string: str, date_string: str, account_id
             error.append("Error: date can't be more than 10 years from today")
     except ValueError:
         error.append("Error: date was not in a valid format")
-    if not get_account_by_user_id(account_id):
+    if not get_account_by_id(account_id):
         error.append("Error: events can only be announced by valid users")
     if not error and restaurant_id and event_date:
         ret = create_event(name, restaurant_id, event_date, account_id)
@@ -104,7 +71,7 @@ def add_event(name: str, restaurant_id_string: str, date_string: str, account_id
 
 
 def check_username_and_password(username: str, password: str):
-    user = get_account_with_password_by_username(username)
+    user = get_accountWithPassword_by_username(username)
     print(f"{user=}")
     if not user:
         return None

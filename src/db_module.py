@@ -38,7 +38,7 @@ def get_account_by_username(username: str):
     return user
 
 
-def get_account_with_password_by_username(username: str):
+def get_accountWithPassword_by_username(username: str):
     sql = "SELECT id,username,password,firstname,lastname FROM accounts WHERE username = :username"
     user = db.session.execute(text(sql), {"username": username}).fetchone()
     return user
@@ -67,9 +67,13 @@ def get_restaurants_by_id(restaurant_id: int):
     return db.session.execute(text(sql), {"restaurant_id": restaurant_id}).fetchone()
 
 
-def get_restaurants_by_account_id(account_id: int):
-    sql = "SELECT id, name, account_id, latitude, longitude, place_id, address FROM restaurants WHERE account_id = :account_id"
-    return db.session.execute(text(sql), {"account_id": account_id}).fetchall()
+def get_restaurants_by_accountId(account_id: int):
+    return db.session.execute(
+        text(
+            "SELECT id, name, account_id, latitude, longitude, place_id, address FROM restaurants WHERE account_id = :account_id"
+        ),
+        {"account_id": account_id},
+    ).fetchall()
 
 
 def create_restaurant(
@@ -93,6 +97,39 @@ def create_restaurant(
     return ret.scalar()
 
 
+def get_accountId_by_restaurantId(restaurant_id: int):
+    return db.session.execute(
+        text("SELECT account_id FROM restaurants WHERE id=:restaurant_id"),
+        {"restaurant_id": restaurant_id},
+    ).fetchone()
+
+
+def update_restaurant_by_id(
+    restaurant_id: int, name, address, latitude, longitude, place_id
+):
+    sql = "UPDATE restaurants SET name=:name, address=:address, latitude=:latitude, longitude=:longitude, place_id=:place_id WHERE id=:restaurant_id"
+    db.session.execute(
+        text(sql),
+        {
+            "restaurant_id": restaurant_id,
+            "name": name,
+            "address": address,
+            "latitude": latitude,
+            "longitude": longitude,
+            "place_id": place_id,
+        },
+    )
+    db.session.commit()
+
+
+def delete_restaurant_by_id(restaurant_id: int):
+    db.session.execute(
+        text("DELETE FROM restaurants WHERE id=:restaurant_id"),
+        {"restaurant_id": restaurant_id},
+    )
+    db.session.commit()
+
+
 #############################################
 #   RATINGS                                 #
 #############################################
@@ -108,7 +145,7 @@ def get_ratings_by_id(rating_id: int):
     return db.session.execute(text(sql), {"rating_id": rating_id}).fetchone()
 
 
-def get_ratings_by_account_id(account_id: int):
+def get_ratings_by_accountId(account_id: int):
     sql = "SELECT * FROM ratings WHERE account_id = :account_id"
     return db.session.execute(text(sql), {"account_id": account_id}).fetchall()
 
@@ -128,7 +165,7 @@ def get_events_by_id(event_id: int):
     return db.session.execute(text(sql), {"event_id": event_id}).fetchone()
 
 
-def get_events_by_account_id(account_id: int):
+def get_events_by_accountId(account_id: int):
     sql = "SELECT * FROM EVENTS WHERE account_id = :account_id"
     return db.session.execute(text(sql), {"account_id": account_id}).fetchall()
 

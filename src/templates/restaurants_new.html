@@ -4,8 +4,9 @@
 <h2>Add new Restaurant</h2>
 <p>Add your Best Restaurant to the Best Restaurant App in the business!</p>
 <form action="/restaurants/create" method="POST">
-    <label class="flabel">Restaurant Name</label> <input class="finput" type="text" name="name"><br>
-    <label class="flabel">Restaurant Address</label> <input class="finput" type="text" name="address">
+    <label class="flabel">Restaurant Name</label> <input class="finput" type="text" name="name">{{ form_data.get("name", "") }}
+    <label class="flabel">Restaurant Address</label> <input class="finput" type="text" name="address">{{ form_data.get("address", "") }}
+    <label class="flabel">Restaurant city</label> Helsinki<br>
     <button class="fbutton" type="submit">Submit</button>
 </form>
 
