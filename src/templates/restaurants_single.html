@@ -9,5 +9,7 @@
 <button formaction="/restaurants/delete/{{restaurant.id}}" formmethod="POST">Delete</button>
 <button formaction="/restaurants/edit/{{restaurant.id}}" formmethod="GET">Edit details</button>
 </form>
+{% elif session.user_id %}
+<a href="/ratings/new?{{restaurant.id}}">Rate your visit here</a>
 {% endif %}
 {% endblock %}

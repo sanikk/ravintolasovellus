@@ -1,4 +1,5 @@
 from datetime import date
+from os import walk
 from app import db
 from sqlalchemy import text
 
@@ -170,6 +171,13 @@ def get_events_by_accountId(account_id: int):
     return db.session.execute(text(sql), {"account_id": account_id}).fetchall()
 
 
+def get_events_by_restaurantId(restaurant_id: int):
+    return db.session.execute(
+        text("SELECT * FROM events WHERE restaurant_id=:restaurant_id"),
+        {"restaurant_id": restaurant_id},
+    ).fetchall()
+
+
 def create_event(name: str, restaurant_id: int, event_date: date, account_id: int):
     if not (name and account_id):
         return None
@@ -184,4 +192,43 @@ def create_event(name: str, restaurant_id: int, event_date: date, account_id: in
         },
     )
     db.session.commit()
+    return ret.scalar()
+
+
+#################################
+# BUFFETS                       #
+#################################
+
+
+def get_buffets_all():
+    return db.session.execute(text("SELECT * FROM buffets")).fetchall()
+
+
+def get_buffets_by_id(buffet_id: int):
+    return db.session.execute(
+        text("SELECT * FROM buffets WHERE id=:buffet_id"), {"buffet_id": buffet_id}
+    ).fetchone()
+
+
+def get_buffets_by_restaurantId(restaurant_id: int):
+    return db.session.execute(
+        text("SELECT id,name FROM buffets WHERE restaurant_id=:restaurant_id"),
+        {"restaurant_id": restaurant_id},
+    ).fetchall()
+
+
+def create_buffet(name, restaurant_id, start_time, end_time, days):
+    sql = "INSERT INTO buffets (name, restaurant_id, start_time, end_time, days) \
+        VALUES (:name, :restaurant_id, :start_time, :end_time, :days) RETURNING id"
+    ret = db.session.execute(
+        text(sql),
+        {
+            "name": name,
+            "restaurant_id": restaurant_id,
+            "start_time": start_time,
+            "end_time": end_time,
+            "days": days,
+        },
+    )
+    db.commit()
     return ret.scalar()

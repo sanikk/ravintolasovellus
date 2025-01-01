@@ -1,4 +1,16 @@
 {% extends "layout.html" %}
 {% block title %}New Rating{% endblock %}
 {% block content %}
+<form action="/ratings/create" method="POST">
+    <label class="flabel">Restaurant</label><select class="finput" name=restaurant_id>
+        {% for restaurant in restaurants %}
+        <option value={{restaurant.id}} {% if restaurant.id == preselected_restaurant %} selected {% endif %} >{{restaurant.name}}</option>
+        {% endfor %}
+    </select>
+    <label class="flabel">Rating</label><select class="finput" name=rating>
+        {% for rating in range(1:6) %}
+        <option value={{rating}}>{{rating}}</option>
+        {{% endfor %}
+    </select>
+</form>
 {% endblock %}

@@ -78,6 +78,16 @@ def create_tables():
     sql = """CREATE TABLE IF NOT EXISTS buffets (
         id SERIAL PRIMARY KEY,
         restaurant_id INTEGER REFERENCES restaurants(id)
+        name TEXT,
+        monday BOOL,
+        tuesday BOOL,
+        wednesday BOOL,
+        thursday BOOL,
+        friday BOOL,
+        saturday BOOL,
+        sunday BOOL,
+        starttime TIME,
+        endtime TIME
     )"""
     cur.execute(sql)
 

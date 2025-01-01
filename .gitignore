@@ -1,2 +1,5 @@
 __pycache__/
 .env
+base_*.html
+load_db.py
+
