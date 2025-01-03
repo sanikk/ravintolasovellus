@@ -192,6 +192,16 @@ def get_events_all():
     return db.session.execute(text(sql)).fetchall()
 
 
+def get_events_list():
+    sql = " SELECT e.id, e.name, e.restaurant_id, r.name AS restaurant_name FROM events e JOIN restaurants r ON e.restaurant_id = r.id"
+    return db.session.execute(text(sql)).fetchall()
+
+
+def get_events_list_by_accountId(account_id: int):
+    sql = " SELECT e.id, e.name, e.event_date, e.restaurant_id, r.name AS restaurant_name FROM events e JOIN restaurants r ON e.restaurant_id = r.id WHERE e.account_id=:account_id"
+    return db.session.execute(text(sql), {"account_id": account_id}).fetchall()
+
+
 def get_events_by_id(event_id: int):
     sql = "SELECT * FROM events WHERE id=:event_id"
     return db.session.execute(text(sql), {"event_id": event_id}).fetchone()

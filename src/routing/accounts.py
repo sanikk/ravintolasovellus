@@ -3,6 +3,7 @@ from app import app
 
 from db_module import (
     create_user,
+    get_events_list_by_accountId,
     update_account_by_id,
     get_account_by_id,
     get_restaurants_by_accountId,
@@ -33,13 +34,15 @@ def accounts_single(account_id: int):
         return redirect("/")
     account = get_account_by_id(account_id)
     restaurants = get_restaurants_by_accountId(account_id)
-    events = get_events_by_accountId(account_id)
+    events2 = get_events_by_accountId(account_id)
+    events = get_events_list_by_accountId(account_id)
     ratings = get_ratings_by_accountId(account_id)
     return render_template(
         "accounts_single.html",
         account=account,
         restaurants=restaurants,
         events=events,
+        events2=events2,
         ratings=ratings,
     )
 
@@ -111,7 +114,12 @@ def accounts_register():
 
 @app.route("/accounts/create", methods=["POST"])
 def accounts_new():
-    username, firstname, lastname, password1, password2 = request.form.values()
+    username = request.form["username"]
+    firstname = request.form["firstname"]
+    lastname = request.form["lastname"]
+    password1 = request.form["password1"]
+    password2 = request.form["password2"]
+    # username, firstname, lastname, password1, password2 = request.form.values()
     password_hash, error = validate_account_data(
         username=username,
         firstname=firstname,

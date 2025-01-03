@@ -4,7 +4,6 @@
 <h2>{{ account.firstname }} {{account.lastname}}</h2>
 <p>Best restaurant app in the business!</p>
 
-<p> This is the account page of {{account.firstname}} {{account.lastname}}<p>
 
 {% if restaurants or events %}
 <p>They currently administer the following.<p>
@@ -23,7 +22,16 @@
 <h4>Events</h4>
 <ul>
     {% for event in events %}
-    <li>{{event}}</li>
+    <li><a href="/events/{{event.id}}">{{event.name}}</a> at <a href="/restaurants/{{event.restaurant_id}}">{{event.restaurant_name}}</a> on {{ event.event_date.strftime("%A %d. %m. %Y") }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if events2 %}
+<h4>Events</h4>
+<ul>
+    {% for event in events2 %}
+    <li><a href="/events/{{event.id}}">{{event}}</a> at {{event.restaurant_id}}</li>
     {% endfor %}
 </ul>
 {% endif %}

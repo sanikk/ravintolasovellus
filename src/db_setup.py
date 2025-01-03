@@ -34,6 +34,11 @@ def drop_tables():
 
 def create_tables():
     conn, cur = get_connection()
+    # sql = SQL("ALTER DATABASE {} SET datestyle TO 'ISO, DMY'").format(
+    #     Identifier(DATABASE_NAME)
+    # )
+    # cur.execute(sql)
+    # conn.commit()
 
     sql = """CREATE TABLE IF NOT EXISTS accounts (
         id SERIAL PRIMARY KEY,
