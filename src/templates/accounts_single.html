@@ -39,8 +39,8 @@
 
 {% if session.user_id == account.id %}
 <form action="/" method="GET"> 
-<button formaction="/accounts/delete/{{id}}" formmethod="POST">Delete</button>
-<button formaction="/accounts/edit/{{id}}" formmethod="GET">Edit details</button>
+<button formaction="/accounts/delete/{{account.id}}" formmethod="POST">Delete</button>
+<button formaction="/accounts/edit/{{account.id}}" formmethod="GET">Edit details</button>
 </form>
 {% endif %}
 {% endblock %}

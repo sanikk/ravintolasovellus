@@ -6,7 +6,7 @@ import routing.restaurants
 import routing.ratings
 import routing.events
 
-from map_service import get_map
+from service.map_service import get_map
 
 
 @app.route("/")

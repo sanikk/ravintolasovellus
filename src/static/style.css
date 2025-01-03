@@ -1,15 +1,17 @@
 form {
     max-width: 600px; 
-    gap: 15px;
 }
 .flabel {
     float: left; 
     text-align: right; 
     width: 25%;
+    margin-bottom: 5px;
+    margin-right: 5px;
 }
 
 .finput {
     width:65%;
+    margin-bottom: 5px;
 }
 
 .fbutton {

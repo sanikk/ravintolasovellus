@@ -37,6 +37,7 @@ def create_tables():
 
     sql = """CREATE TABLE IF NOT EXISTS accounts (
         id SERIAL PRIMARY KEY,
+        active BOOL,
         username TEXT UNIQUE,
         firstname TEXT,
         lastname TEXT,
@@ -46,6 +47,7 @@ def create_tables():
 
     sql = """CREATE TABLE IF NOT EXISTS restaurants (
         id SERIAL PRIMARY KEY,
+        active BOOL,
         name TEXT,
         account_id INTEGER REFERENCES accounts(id),
         latitude FLOAT,
@@ -57,6 +59,7 @@ def create_tables():
 
     sql = """CREATE TABLE IF NOT EXISTS ratings (
         id SERIAL PRIMARY KEY,
+        active BOOL,
         account_id INTEGER REFERENCES accounts(id),
         restaurant_id INTEGER REFERENCES restaurants(id),
         posted_on TIMESTAMPTZ DEFAULT NOW(),
@@ -67,6 +70,7 @@ def create_tables():
 
     sql = """CREATE TABLE IF NOT EXISTS events (
         id SERIAL PRIMARY KEY,
+        active BOOL,
         name TEXT,
         event_date DATE,
         restaurant_id INTEGER REFERENCES restaurants(id),
@@ -77,7 +81,8 @@ def create_tables():
 
     sql = """CREATE TABLE IF NOT EXISTS buffets (
         id SERIAL PRIMARY KEY,
-        restaurant_id INTEGER REFERENCES restaurants(id)
+        active BOOL,
+        restaurant_id INTEGER REFERENCES restaurants(id),
         name TEXT,
         monday BOOL,
         tuesday BOOL,

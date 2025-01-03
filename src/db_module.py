@@ -1,5 +1,4 @@
 from datetime import date
-from os import walk
 from app import db
 from sqlalchemy import text
 
@@ -24,6 +23,38 @@ def create_user(username: str, firstname: str, lastname: str, password_hash: str
     )
     db.session.commit()
     return ret.scalar()
+
+
+def update_account_by_id(
+    account_id: int, username: str, firstname: str, lastname: str, password_hash=None
+):
+    sql = ""
+    ret = None
+    if password_hash:
+        sql = "UPDATE accounts SET username=:username, firstname=:firstname, lastname=:lastname, password=:password_hash WHERE id=:account_id RETURNING id"
+        ret = db.session.execute(
+            text(sql),
+            {
+                "username": username,
+                "firstname": firstname,
+                "lastname": lastname,
+                "password-hash": password_hash,
+                "account_id": account_id,
+            },
+        )
+    else:
+        sql = "UPDATE accounts SET username=:username, firstname=:firstname, lastname=:lastname WHERE id=:account_id RETURNING id"
+        ret = db.session.execute(
+            text(sql),
+            {
+                "username": username,
+                "firstname": firstname,
+                "lastname": lastname,
+                "account_id": account_id,
+            },
+        )
+    db.session.commit()
+    return ret
 
 
 def get_accounts_all():

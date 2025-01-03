@@ -5,10 +5,10 @@ from flask import flash
 def get_lat_long_placeid(street_address: str):
     url = "https://nominatim.openstreetmap.org/search"
     params = {
-        "q": street_address,
+        "street": street_address,
+        "city": "helsinki",
         "format": "json",
         "addressdetails": 1,
-        "class": "place",
     }
     headers = {"User-Agent": "MyRestaurantApp/1.0 (sanikk@users.noreply.github.com)"}
     response = get(url, params=params, headers=headers)
