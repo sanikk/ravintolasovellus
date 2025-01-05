@@ -42,53 +42,58 @@ def create_tables():
 
     sql = """CREATE TABLE IF NOT EXISTS accounts (
         id SERIAL PRIMARY KEY,
-        active BOOL,
-        username TEXT UNIQUE,
-        firstname TEXT,
-        lastname TEXT,
-        password TEXT
+        active BOOL DEFAULT TRUE,
+        username VARCHAR(32) UNIQUE,
+        password VARCHAR(256),
+        email VARCHAR(64),
+        billing_info VARCHAR(256),
+        firstname VARCHAR(32),
+        lastname VARCHAR(32),
+        description VARCHAR(500)
     )"""
     cur.execute(sql)
 
     sql = """CREATE TABLE IF NOT EXISTS restaurants (
         id SERIAL PRIMARY KEY,
-        active BOOL,
-        name TEXT,
+        active BOOL DEFAULT TRUE,
+        name VARCHAR(64),
         account_id INTEGER REFERENCES accounts(id),
         latitude FLOAT,
         longitude FLOAT,
-        place_id TEXT,
-        address TEXT
+        place_id VARCHAR(20),
+        address VARCHAR(128)
     )"""
     cur.execute(sql)
 
     sql = """CREATE TABLE IF NOT EXISTS ratings (
         id SERIAL PRIMARY KEY,
-        active BOOL,
+        active BOOL DEFAULT TRUE,
         account_id INTEGER REFERENCES accounts(id),
         restaurant_id INTEGER REFERENCES restaurants(id),
         posted_on TIMESTAMPTZ DEFAULT NOW(),
         rating INTEGER,
-        content TEXT
+        content VARCHAR(500)
     )"""
     cur.execute(sql)
 
     sql = """CREATE TABLE IF NOT EXISTS events (
         id SERIAL PRIMARY KEY,
-        active BOOL,
-        name TEXT,
-        event_date DATE,
+        active BOOL DEFAULT FALSE,
+        name VARCHAR(128),
         restaurant_id INTEGER REFERENCES restaurants(id),
         posted_on TIMESTAMPTZ DEFAULT NOW(),
-        account_id INTEGER REFERENCES accounts(id)
+        account_id INTEGER REFERENCES accounts(id),
+        start_time TIMESTAMPTZ,
+        end_time TIMESTAMPTZ
     )"""
     cur.execute(sql)
+    # event_date DATE,
 
     sql = """CREATE TABLE IF NOT EXISTS buffets (
         id SERIAL PRIMARY KEY,
-        active BOOL,
+        active BOOL DEFAULT TRUE,
         restaurant_id INTEGER REFERENCES restaurants(id),
-        name TEXT,
+        name VARCHAR(128),
         monday BOOL,
         tuesday BOOL,
         wednesday BOOL,
@@ -97,21 +102,33 @@ def create_tables():
         saturday BOOL,
         sunday BOOL,
         starttime TIME,
-        endtime TIME
+        endtime TIME,
+        description VARCHAR(500)
     )"""
     cur.execute(sql)
 
-    sql = """CREATE TABLE IF NOT EXISTS specialities (
+    sql = """CREATE TABLE IF NOT EXISTS messages (
         id SERIAL PRIMARY KEY,
-        name TEXT
+        active BOOL DEFAULT TRUE,
+        sender_id INTEGER REFERENCES accounts(id),
+        receiver_id INTEGER REFERENCES accounts(id),
+        sent_on TIMESTAMPTZ DEFAULT NOW(),
+        title VARCHAR(256),
+        content VARCHAR(2048)
     )"""
     cur.execute(sql)
 
-    sql = """CREATE TABLE IF NOT EXISTS speciality_restaurants (
-        restaurant_id INTEGER REFERENCES restaurants(id),
-        speciality_id INTEGER REFERENCES specialities(id)
-    )"""
-    cur.execute(sql)
+    #     sql = """CREATE TABLE IF NOT EXISTS specialities (
+    #         id SERIAL PRIMARY KEY,
+    #         name TEXT
+    #     )"""
+    #     cur.execute(sql)
+    #
+    #     sql = """CREATE TABLE IF NOT EXISTS speciality_restaurants (
+    #         restaurant_id INTEGER REFERENCES restaurants(id),
+    #         speciality_id INTEGER REFERENCES specialities(id)
+    #     )"""
+    #     cur.execute(sql)
 
     #     ADMIN_USERNAME = input("Please enter an admin username: ")
     #     ADMIN_PASSWORD = input("Please enter an admin password: ")
