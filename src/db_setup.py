@@ -15,12 +15,12 @@ def get_connection():
 def drop_tables():
     conn, cur = get_connection()
     table_list = [
-        "speciality_restaurants",
-        "specialities",
         "events",
         "buffets",
         "ratings",
+        "opening_hours",
         "restaurants",
+        "messages",
         "accounts",
     ]
     for table in table_list:
@@ -61,7 +61,8 @@ def create_tables():
         latitude FLOAT,
         longitude FLOAT,
         place_id VARCHAR(20),
-        address VARCHAR(128)
+        address VARCHAR(128),
+        description VARCHAR(500)
     )"""
     cur.execute(sql)
 
@@ -71,7 +72,7 @@ def create_tables():
         account_id INTEGER REFERENCES accounts(id),
         restaurant_id INTEGER REFERENCES restaurants(id),
         posted_on TIMESTAMPTZ DEFAULT NOW(),
-        rating INTEGER,
+        rating INTEGER CHECK(rating BETWEEN 1 AND 5),
         content VARCHAR(500)
     )"""
     cur.execute(sql)
@@ -84,7 +85,8 @@ def create_tables():
         posted_on TIMESTAMPTZ DEFAULT NOW(),
         account_id INTEGER REFERENCES accounts(id),
         start_time TIMESTAMPTZ,
-        end_time TIMESTAMPTZ
+        end_time TIMESTAMPTZ,
+        description VARCHAR(500)
     )"""
     cur.execute(sql)
     # event_date DATE,
@@ -115,6 +117,15 @@ def create_tables():
         sent_on TIMESTAMPTZ DEFAULT NOW(),
         title VARCHAR(256),
         content VARCHAR(2048)
+    )"""
+    cur.execute(sql)
+
+    sql = """CREATE TABLE IF NOT EXISTS opening_hours (
+        restaurant_id INTEGER REFERENCES restaurants(id),
+        day_id INTEGER CHECK(day_id BETWEEN 1 and 7),
+        opens_at TIME,
+        closes_at TIME,
+        PRIMARY KEY(restaurant_id, day_id)
     )"""
     cur.execute(sql)
 
