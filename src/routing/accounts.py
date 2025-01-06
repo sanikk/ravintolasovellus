@@ -7,7 +7,6 @@ from db_module import (
     update_account_by_id,
     get_account_by_id,
     get_restaurants_by_accountId,
-    get_events_by_accountId,
     get_ratings_by_accountId,
 )
 from service.validation_service import (
@@ -29,12 +28,11 @@ from service.validation_service import (
 
 @app.route("/accounts/<int:account_id>")
 def accounts_single(account_id: int):
-    if session["user_id"] != account_id:
+    if "user_id" not in session or session["user_id"] != account_id:
         flash("Error: You are not logged in as the owner of this account.")
         return redirect("/")
     account = get_account_by_id(account_id)
     restaurants = get_restaurants_by_accountId(account_id)
-    events2 = get_events_by_accountId(account_id)
     events = get_events_list_by_accountId(account_id)
     ratings = get_ratings_by_accountId(account_id)
     return render_template(
@@ -42,7 +40,6 @@ def accounts_single(account_id: int):
         account=account,
         restaurants=restaurants,
         events=events,
-        events2=events2,
         ratings=ratings,
     )
 

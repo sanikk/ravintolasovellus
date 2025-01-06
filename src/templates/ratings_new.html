@@ -8,9 +8,10 @@
         {% endfor %}
     </select>
     <label class="flabel">Rating</label><select class="finput" name=rating>
-        {% for rating in range(1:6) %}
+        {% for rating in range(1,6) %}
         <option value={{rating}}>{{rating}}</option>
-        {{% endfor %}
+        {% endfor %}
     </select>
+    <textarea rows="5" maxlength="500" placeholder="Write a comment here"></textarea>
 </form>
 {% endblock %}

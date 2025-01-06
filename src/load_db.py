@@ -20,9 +20,24 @@ accounts = [
     ("tauno", "taunotauno", "tauno", "tanhuvainen"),
     ("pekka", "pekkapekka", "pekka", "piupelipoo"),
     ("camacho", "camacho", "mountain dew", "camacho"),
+    ("molly", "millions", "molly", "millions"),
+    ("case", "casecase", "henry", "case"),
+    ("lupus", "lupuslupus", "lupus", "yonderboy"),
+    ("deane", "deanedeane", "julius", "deane"),
+    ("longhum", "longhum", "long", "hum"),
+    ("danielle", "danielle", "danielle", "stark"),
+    ("crowjane", "crowjane", "crow", "jane"),
+    ("robin", "robinrobin", "robin", "lanier"),
+    ("virginia", "virginia", "virginia", "rambaldi"),
 ]
+
 sql = """INSERT INTO accounts (username, password, firstname, lastname) VALUES (%s, %s, %s, %s)"""
-cur.executemany(sql, accounts)
+[
+    cur.execute(sql, (acc[0], generate_password_hash(acc[1]), acc[2], acc[3]))
+    for acc in accounts
+]
+conn.commit()
+# cur.executemany(sql, accounts)
 restaurants = [
     ("le bar", 1, "Mannerheimintie 1", 60.1692, 24.9402, 123456789),
     ("le restaurant", 2, "Mannerheimintie 3", 60.1700, 24.9410, 987654321),
@@ -32,30 +47,136 @@ restaurants = [
     ("bar t", 2, "Simonkatu 4", 60.1680, 24.9310, 567890123),
     ("ristorant E", 3, "Kaivokatu 2", 60.1710, 24.9400, 678901234),
 ]
-# restaurants = [
-#     ("le bar", 1, "Mannerheimintie 1"),
-#     ("le restaurant", 2, "Mannerheimintie 3"),
-#     ("le other restaurant", 3, "Korkeavuorenkatu 22"),
-#     ("good restaurant", 4, "Liisankatu 14"),
-#     ("bar f", 1, "Kaivokatu 3"),
-#     ("bar t", 2, "Simonkatu 4"),
-#     ("ristorant E", 3, "Kaivokatu 2"),
-# ]
 sql = """INSERT INTO restaurants (name, account_id, address, latitude, longitude, place_id) VALUES (%s, %s, %s, %s, %s, %s)"""
 cur.executemany(sql, restaurants)
 conn.commit()
 
 
 events = [
-    ("B-Day Bash", date(2025, 2, 1), 1, 1),
-    ("The Ritual", date(2025, 1, 30), 2, 2),
-    ("Tuomiopäivä - Keinäsen Nimipäivä", date(2025, 6, 6), 3, 1),
-    ("KrisKros Megaparty", date(2025, 4, 30), 1, 4),
-    ("WappuLounas", date(2025, 5, 1), 4, 4),
+    (
+        "B-Day Bash",
+        datetime(2025, 2, 1, 18, 0),
+        datetime(2025, 2, 1, 23, 0),
+        1,
+        1,
+        "Celebrate a birthday bash!",
+    ),
+    (
+        "The Ritual",
+        datetime(2025, 1, 30, 20, 0),
+        datetime(2025, 1, 30, 23, 30),
+        2,
+        2,
+        "A mysterious ritual event.",
+    ),
+    (
+        "Tuomiopäivä - Keinäsen Nimipäivä",
+        datetime(2025, 6, 6, 12, 0),
+        datetime(2025, 6, 6, 15, 0),
+        3,
+        1,
+        "A special name day celebration.",
+    ),
+    (
+        "KrisKros Megaparty",
+        datetime(2025, 4, 30, 21, 0),
+        datetime(2025, 5, 1, 2, 0),
+        1,
+        4,
+        "Get ready for a KrisKros mega event!",
+    ),
+    (
+        "WappuLounas",
+        datetime(2025, 5, 1, 11, 0),
+        datetime(2025, 5, 1, 14, 0),
+        4,
+        4,
+        "A traditional Wappu lunch.",
+    ),
+    (
+        "Trivia Night",
+        datetime(2025, 2, 14, 19, 0),
+        datetime(2025, 2, 14, 21, 0),
+        5,
+        5,
+        "Test your knowledge at trivia night.",
+    ),
+    (
+        "Jazz Evening",
+        datetime(2025, 3, 10, 18, 30),
+        datetime(2025, 3, 10, 22, 0),
+        6,
+        6,
+        "Enjoy live jazz performances.",
+    ),
+    (
+        "Coding Marathon",
+        datetime(2025, 4, 5, 9, 0),
+        datetime(2025, 4, 5, 18, 0),
+        7,
+        7,
+        "Collaborate and code all day.",
+    ),
+    (
+        "Art Showcase",
+        datetime(2025, 2, 20, 17, 0),
+        datetime(2025, 2, 20, 20, 30),
+        1,
+        8,
+        "Local artists showcase their work.",
+    ),
+    (
+        "Open Mic Night",
+        datetime(2025, 3, 25, 19, 0),
+        datetime(2025, 3, 25, 22, 0),
+        2,
+        9,
+        "Share your talent or watch others perform.",
+    ),
+    (
+        "Wine Tasting",
+        datetime(2025, 4, 18, 18, 0),
+        datetime(2025, 4, 18, 21, 0),
+        3,
+        10,
+        "Sample fine wines with friends.",
+    ),
+    (
+        "Gaming Tournament",
+        datetime(2025, 5, 12, 10, 0),
+        datetime(2025, 5, 12, 18, 0),
+        4,
+        11,
+        "Compete in a day-long gaming event.",
+    ),
+    (
+        "Book Club Meetup",
+        datetime(2025, 6, 7, 16, 0),
+        datetime(2025, 6, 7, 18, 0),
+        5,
+        12,
+        "Discuss the latest book with fellow readers.",
+    ),
+    (
+        "Charity Gala",
+        datetime(2025, 6, 20, 19, 0),
+        datetime(2025, 6, 20, 23, 0),
+        6,
+        13,
+        "Support a good cause at this elegant gala.",
+    ),
+    (
+        "Summer Picnic",
+        datetime(2025, 7, 15, 12, 0),
+        datetime(2025, 7, 15, 16, 0),
+        7,
+        14,
+        "Join us for a relaxing summer picnic.",
+    ),
 ]
 
 
-sql = """INSERT INTO events (active, name, event_date, restaurant_id, account_id) VALUES (%s, TRUE, %s, %s, %s)"""
+sql = """INSERT INTO events (active, name, start_time, end_time, restaurant_id, account_id, description) VALUES (TRUE, %s, %s, %s, %s, %s, %s)"""
 cur.executemany(sql, events)
 
 ratings = [
