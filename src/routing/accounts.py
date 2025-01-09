@@ -46,56 +46,43 @@ def accounts_single(account_id: int):
 
 @app.route("/accounts/edit/<int:account_id>")
 def accounts_edit_form(account_id: int):
-    account = get_account_by_id(account_id)
-    if (
-        not account_id
-        or not account
-        or not "user_id" in session
-        or session["user_id"] != account_id
-    ):
-        flash("Error: You are not logged in as the owner of this account.")
-        return redirect("/")
-    return render_template("accounts_edit.html", account=account)
+    if account_id:
+        account = get_account_by_id(account_id)
+        if account and "user_id" in session and session["user_id"] == account_id:
+            return render_template("accounts_edit.html", account=account, form_data={})
+    flash("Error: You are not logged in as the owner of this account.")
+    return redirect("/")
 
 
 @app.route("/accounts/update/<int:account_id>", methods=["POST"])
 def update_accounts_endpoint(account_id: int):
     if "user_id" in session and session["user_id"] == account_id:
         account = get_account_by_id(account_id)
-        username = request.form["username"]
         if account:
-            email = request.form["email"]
-            firstname = request.form["firstname"]
-            lastname = request.form["lastname"]
-            billing_info = request.form["billing_info"]
-            description = request.form["description"]
+            user_info = {
+                "username": request.form["username"],
+                "email": request.form["email"],
+                "billing_info": request.form["billing_info"],
+                "firstname": request.form["firstname"],
+                "lastname": request.form["lastname"],
+                "description": request.form["description"],
+            }
             newpassword1 = request.form["newpassword1"]
             newpassword2 = request.form["newpassword2"]
             oldpassword = request.form["oldpassword"]
 
             if check_username_and_password(account.username, oldpassword):
-                password_hash = None
-                error = None
-
-                if newpassword1 and newpassword2:
-                    password_hash, error = validate_account_data(
-                        username, firstname, lastname, newpassword1, newpassword2
-                    )
-                else:
-                    _, error = validate_account_data(
-                        username, firstname, lastname, oldpassword, oldpassword
-                    )
+                password_hash, error = validate_account_data(
+                    **user_info,
+                    password1=newpassword1,
+                    password2=newpassword2,
+                )
 
                 if not error:
                     ret = update_account_by_id(
-                        account_id,
-                        username,
-                        email,
-                        billing_info,
-                        firstname,
-                        lastname,
-                        description,
-                        password_hash,
+                        account_id=account_id,
+                        **user_info,
+                        password_hash=password_hash,
                     )
                     if ret:
                         return redirect(f"/accounts/{account_id}")
@@ -103,7 +90,9 @@ def update_accounts_endpoint(account_id: int):
                         "Error: something went wrong trying to update your account."
                     )
                 [flash(err) for err in error]
-                return redirect("/")
+                return render_template(
+                    "accounts_edit.html", account=account, form_data=request.form
+                )
 
     flash("Error: Credentials don't match the owner of this account.")
     return redirect("/")
@@ -116,45 +105,53 @@ def update_accounts_endpoint(account_id: int):
 
 @app.route("/accounts/registration")
 def accounts_register():
-    return render_template("accounts_new.html")
+    return render_template("accounts_new.html", form_data={})
 
 
 @app.route("/accounts/create", methods=["POST"])
 def accounts_new():
-    username = request.form["username"]
-    email = request.form["email"]
-    billing_info = request.form["billing_info"]
-    firstname = request.form["firstname"]
-    lastname = request.form["lastname"]
-    description = request.form["description"]
+    user_info = {
+        "username": request.form["username"],
+        "email": request.form["email"],
+        "billing_info": request.form["billing_info"],
+        "firstname": request.form["firstname"],
+        "lastname": request.form["lastname"],
+        "description": request.form["description"],
+    }
     password1 = request.form["password1"]
     password2 = request.form["password2"]
-    # username, firstname, lastname, password1, password2 = request.form.values()
-    password_hash, error = validate_account_data(
-        username=username,
-        firstname=firstname,
-        lastname=lastname,
-        password1=password1,
-        password2=password2,
-    )
-    if not error and password_hash:
-        return_value = create_user(
-            username,
-            password_hash,
-            email,
-            billing_info,
-            firstname,
-            lastname,
-            description,
+
+    if not password1 or not password2 or password1 != password2:
+        flash("Error: please enter the same password in both password fields")
+    elif not (user_info["firstname"] or user_info["lastname"]):
+        flash(
+            "Error: You should give some kind of first name or last name we can show."
         )
-        if return_value:
-            session["user_id"] = return_value
-            session["screenname"] = firstname or lastname or username
-            return redirect(f"/accounts/{return_value}")
-        error.append(
-            "Error: Something went wrong creating the account. No return value."
+
+    else:
+
+        password_hash, error = validate_account_data(
+            **user_info,
+            password1=password1,
+            password2=password2,
         )
-    [flash(err) for err in error]
+        if not error and password_hash:
+            return_value = create_user(
+                **user_info,
+                password_hash=password_hash,
+            )
+            if return_value:
+                session["user_id"] = return_value
+                session["screenname"] = (
+                    user_info["firstname"]
+                    or user_info["lastname"]
+                    or user_info["username"]
+                )
+                return redirect(f"/accounts/{return_value}")
+            error.append(
+                "Error: Something went wrong creating the account. No return value."
+            )
+        [flash(err) for err in error]
     return render_template(
         "accounts_new.html",
         form_data=request.form,
@@ -171,7 +168,7 @@ def login_user():
         return redirect(request.referrer or "/")
     session["user_id"], session["screenname"] = ret
     flash("Success: Login was succesful.")
-    return redirect(request.referrer or "/")
+    return redirect(request.referrer or f"/accounts/{ret}")
 
 
 @app.route("/accounts/logout")

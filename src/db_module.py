@@ -46,37 +46,44 @@ def update_account_by_id(
     description: str,
     password_hash=None,
 ):
-    sql = ""
-    ret = None
+    if not account_id or not (
+        username
+        or email
+        or billing_info
+        or firstname
+        or lastname
+        or description
+        or password_hash
+    ):
+        return None
+    sql = "UPDATE accounts SET "
+    param_list = []
+    valuedict = {}
+    if username:
+        param_list.append("username=:username")
+        valuedict["username"] = username
     if password_hash:
-        sql = "UPDATE accounts SET username=:username, password=:password, email=:email, billing_info=:billing_info, firstname=:firstname, lastname=:lastname, description=:description WHERE id=:account_id AND active = TRUE RETURNING id"
-        ret = db.session.execute(
-            text(sql),
-            {
-                "username": username,
-                "password": password_hash,
-                "email": email,
-                "billing_info": billing_info,
-                "firstname": firstname,
-                "lastname": lastname,
-                "description": description,
-                "account_id": account_id,
-            },
-        )
-    else:
-        sql = "UPDATE accounts SET username=:username, firstname=:firstname, lastname=:lastname WHERE id=:account_id AND active = TRUE RETURNING id"
-        ret = db.session.execute(
-            text(sql),
-            {
-                "username": username,
-                "email": email,
-                "billing_info": billing_info,
-                "firstname": firstname,
-                "lastname": lastname,
-                "description": description,
-                "account_id": account_id,
-            },
-        )
+        param_list.append("password=:password")
+        valuedict["password"] = password_hash
+    if email:
+        param_list.append("email=:email")
+        valuedict["email"] = email
+    if billing_info:
+        param_list.append("billing_info=:billing_info")
+        valuedict["billing_info"] = billing_info
+    if firstname:
+        param_list.append("firstname=:firstname")
+        valuedict["firstname"] = firstname
+    if lastname:
+        param_list.append("lastname=:lastname")
+        valuedict["lastname"] = lastname
+    if description:
+        param_list.append("description=:description")
+        valuedict["description"] = description
+    valuedict["account_id"] = account_id
+    sql += ",".join(param_list) + " WHERE id=:account_id AND active = TRUE RETURNING id"
+    print(f"{sql=}")
+    ret = db.session.execute(text(sql), valuedict)
     db.session.commit()
     return ret
 
@@ -91,6 +98,11 @@ def get_account_by_id(account_id: int):
     sql = "SELECT id, username, email, billing_info, firstname, lastname, description FROM accounts WHERE id = :account_id AND active = TRUE"
     user = db.session.execute(text(sql), {"account_id": account_id}).fetchone()
     return user
+
+
+def check_account_email(email: str):
+    sql = "SELECT email FROM accounts WHERE email=:email"
+    return db.session.execute(text(sql), {"email": email}).fetchone()
 
 
 def delete_user_by_id(account_id: int):

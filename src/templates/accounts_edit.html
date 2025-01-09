@@ -1,16 +1,72 @@
 {% extends "layout.html" %}
-{% block title %}Register{% endblock %}
+{% block title %}Register account{% endblock %}
 {% block content %}
 <h2>Edit account details</h2>
 <p>Add your Best Self to the Best Restaurant App in the business!</p>
 <form action="/accounts/update/{{account.id}}" method="POST">
-    <label class="flabel">Username </label><input class="finput" type="text" name="username" value="{{account.username}}">
-    <label class="flabel">First Name </label><input class="finput" type="text" name="firstname" value="{{account.firstname | default('') }}">
-    <label class="flabel">Last Name </label><input class="finput" type="text" name="lastname" value="{{account.lastname | default('') }}">
-    <label class="flabel">New Password </label><input class="finput" type="password" name="newpassword1">
-    <label class="flabel">New password again </label> <input class="finput" type="password" name="newpassword2">
+    <label class="flabel">Username </label>
+    <input 
+        class="finput" 
+        type="text" 
+        name="username" 
+        placeholder="{{account.username}}" 
+        value="{{form_data.get("username", "")}}"
+    >
+    
+    <label class="flabel">Email</label> 
+    <input 
+        class="finput" 
+        type="text" 
+        name="email" 
+        placeholder="{{account.email | default('')}}" 
+        value="{{form_data.get("email", "")}}"
+    >
+    
+    <label class="flabel">Billing Info</label> 
+    <input 
+        class="finput" 
+        type="text" 
+        name="billing_info" 
+        placeholder="{{account.billing_info | default('')}}" 
+        value="{{form_data.get("billing_info", "")}}"
+    >
+    
+    <label class="flabel">First Name </label>
+    <input 
+        class="finput" 
+        type="text" 
+        name="firstname" 
+        placeholder="{{account.firstname | default('')}}" 
+        value="{{form_data.get("firstname", "")}}"
+    >
+
+    <label class="flabel">Last Name </label>
+    <input 
+        class="finput" 
+        type="text" 
+        name="lastname" 
+        placeholder="{{account.lastname | default('') }}" 
+        value="{{form_data.get("lastname", "")}}"
+    >
+    
+    <label class="flabel">Your Tagline</label>
+    <textarea 
+        class="finput" 
+        rows="5" 
+        maxlength=500 
+        name="description" 
+        placeholder="{{account.description | default('')}}" 
+        value="{{form_data.get("description", "")}}"
+    ></textarea>
+
+    <label class="flabel">New Password </label>
+    <input class="finput" type="password" name="newpassword1">
+
+    <label class="flabel">New password again </label> 
+    <input class="finput" type="password" name="newpassword2">
     <hr>
-    <label class="flabel">Old Password to Confirm</label>   <input class="finput" type="password" name="oldpassword">
+    <label class="flabel">Old Password to Confirm</label>   
+    <input class="finput" type="password" name="oldpassword">
 
     <row class="fbutton">
         <button formaction="/accounts/{{account.id}}" formmethod="GET">Cancel</button>

@@ -47,15 +47,17 @@
 <hr>
 © 2024 Samuli Nikkilä
 <script>
-document.querySelectorAll('.error_message').forEach((elem, index) => {
+const error_messages = document.querySelectorAll('.error_message')
+error_messages.forEach((elem, index) => {
     setTimeout(() => {
         elem.style.display = 'none';
-    }, 5000 * (index + 1));
+    }, error_messages.length * 1000 + 5000);
 });
-document.querySelectorAll('.flash_message').forEach((elem, index) => {
+const other_messages = document.querySelectorAll('.flash_message')
+other_messages.forEach((elem, index) => {
     setTimeout(() => {
         elem.style.display = 'none';
-    }, 5000 * (index + 1));
+    }, other_messages.length * 1000 + 5000);
 });
 </script>
 </body>

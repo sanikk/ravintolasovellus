@@ -46,7 +46,7 @@ def create_tables():
         active BOOL DEFAULT TRUE,
         username VARCHAR(32) UNIQUE,
         password VARCHAR(256),
-        email VARCHAR(64),
+        email VARCHAR(64) UNIQUE,
         billing_info VARCHAR(256),
         firstname VARCHAR(32),
         lastname VARCHAR(32),
