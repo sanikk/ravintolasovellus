@@ -2,11 +2,19 @@
 {% block title %}Single account page{% endblock %}
 {% block content %}
 <h2>{{ account.firstname }} {{account.lastname}}</h2>
-<p>Best restaurant app in the business!</p>
+
+
+<p>Your public tagline is:
+    {{ account.description }}</p>
+
+<p>Billing Info set to:<br>
+    {{account.billing_info}}</p>
+
+<p>Registered email is: {{account.email}}</p>
 
 
 {% if restaurants or events %}
-<p>They currently administer the following.<p>
+<p>You currently administer the following.<p>
 {% endif %}
 
 {% if restaurants %}
@@ -31,7 +39,7 @@
 <h4>They have written the following reviews</h4>
 <ul>
     {% for rating in ratings %}
-    <li>{{rating}}</li>
+    <li><a href="/ratings/{{rating.id}}">A rating of {{rating.rating}}</a> for restaurant <a href="/restaurants/{{rating.restaurant_id}}">{{rating.restaurant_name}}</a> on {{rating.posted_on}}</li> 
     {% endfor %}
 </ul>
 {% endif %}

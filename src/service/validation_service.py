@@ -1,7 +1,6 @@
 from db_module import (
     get_account_by_id,
     get_account_by_username,
-    get_accountWithPassword_by_username,
 )
 from service.convert_address import get_lat_long_placeid
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -49,7 +48,7 @@ def validate_account_data(
 
 
 def check_username_and_password(username: str, password: str):
-    user = get_accountWithPassword_by_username(username)
+    user = get_account_by_username(username)
     if not user:
         return None
     if check_password_hash(user.password, password):

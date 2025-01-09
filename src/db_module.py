@@ -7,6 +7,7 @@ from sqlalchemy import text
 #################################
 
 
+# id, active, username, password, email, billing_info, firstname, lastname, description
 def create_user(
     username: str,
     password_hash: str,
@@ -81,12 +82,6 @@ def update_account_by_id(
 
 
 def get_account_by_username(username: str):
-    sql = "SELECT id,username,firstname,lastname FROM accounts WHERE username = :username AND active = TRUE"
-    user = db.session.execute(text(sql), {"username": username}).fetchone()
-    return user
-
-
-def get_accountWithPassword_by_username(username: str):
     sql = "SELECT id,username,password,firstname,lastname FROM accounts WHERE username = :username AND active = TRUE"
     user = db.session.execute(text(sql), {"username": username}).fetchone()
     return user
@@ -211,12 +206,16 @@ def get_ratings_all():
 
 
 def get_ratings_by_id(rating_id: int):
-    sql = "SELECT rat.*, res.name as restaurant_name, a.name  FROM ratings rat JOIN restaurants res ON ratings.restaurant_id = restaurants.id JOIN accounts a ON ratings.account_id = accounts.id WHERE id = :rating_id AND active = TRUE"
+    sql = "SELECT rat.*, res.name as restaurant_name, a.firstname AS account_firstname, a.lastname AS account_lastname \
+            FROM ratings rat JOIN restaurants res ON rat.restaurant_id = res.id JOIN accounts a ON rat.account_id = a.id \
+            WHERE rat.id = :rating_id AND rat.active = TRUE"
     return db.session.execute(text(sql), {"rating_id": rating_id}).fetchone()
 
 
 def get_ratings_by_accountId(account_id: int):
-    sql = "SELECT rat.restaurant_id, rat.rating, rat.posted_on, res.name FROM ratings rat JOIN restaurants res ON rat.restaurant_id = res.id WHERE rat.account_id = :account_id AND rat.active = TRUE"
+    sql = "SELECT rat.id, rat.restaurant_id, rat.rating, TO_CHAR(rat.posted_on, 'DD.MM.YYYY HH24:MM:SS') AS posted_on, res.name AS restaurant_name \
+            FROM ratings rat JOIN restaurants res ON rat.restaurant_id = res.id \
+            WHERE rat.account_id = :account_id AND rat.active = TRUE"
     return db.session.execute(text(sql), {"account_id": account_id}).fetchall()
 
 

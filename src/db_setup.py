@@ -40,6 +40,7 @@ def create_tables():
     # cur.execute(sql)
     # conn.commit()
 
+    # id, active, username, password, email, billing_info, firstname, lastname, description
     sql = """CREATE TABLE IF NOT EXISTS accounts (
         id SERIAL PRIMARY KEY,
         active BOOL DEFAULT TRUE,
@@ -64,6 +65,8 @@ def create_tables():
         address VARCHAR(128),
         description VARCHAR(500)
     )"""
+    cur.execute(sql)
+    sql = """CREATE INDEX idx_account_active ON restaurants (account_id, active);"""
     cur.execute(sql)
 
     sql = """CREATE TABLE IF NOT EXISTS ratings (

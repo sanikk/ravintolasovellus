@@ -64,8 +64,11 @@ def update_accounts_endpoint(account_id: int):
         account = get_account_by_id(account_id)
         username = request.form["username"]
         if account:
+            email = request.form["email"]
             firstname = request.form["firstname"]
             lastname = request.form["lastname"]
+            billing_info = request.form["billing_info"]
+            description = request.form["description"]
             newpassword1 = request.form["newpassword1"]
             newpassword2 = request.form["newpassword2"]
             oldpassword = request.form["oldpassword"]
@@ -85,7 +88,14 @@ def update_accounts_endpoint(account_id: int):
 
                 if not error:
                     ret = update_account_by_id(
-                        account_id, username, firstname, lastname, password_hash
+                        account_id,
+                        username,
+                        email,
+                        billing_info,
+                        firstname,
+                        lastname,
+                        description,
+                        password_hash,
                     )
                     if ret:
                         return redirect(f"/accounts/{account_id}")
@@ -112,8 +122,11 @@ def accounts_register():
 @app.route("/accounts/create", methods=["POST"])
 def accounts_new():
     username = request.form["username"]
+    email = request.form["email"]
+    billing_info = request.form["billing_info"]
     firstname = request.form["firstname"]
     lastname = request.form["lastname"]
+    description = request.form["description"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
     # username, firstname, lastname, password1, password2 = request.form.values()
@@ -125,7 +138,15 @@ def accounts_new():
         password2=password2,
     )
     if not error and password_hash:
-        return_value = create_user(username, firstname, lastname, password_hash)
+        return_value = create_user(
+            username,
+            password_hash,
+            email,
+            billing_info,
+            firstname,
+            lastname,
+            description,
+        )
         if return_value:
             session["user_id"] = return_value
             session["screenname"] = firstname or lastname or username
