@@ -4,7 +4,7 @@
 <h2>{{ account.firstname }} {{account.lastname}}</h2>
 
 
-<p>Your public tagline is:
+<p>Your public tagline is:<br>
     {{ account.description }}</p>
 
 <p>Billing Info set to:<br>
@@ -27,7 +27,7 @@
 {% endif %}
 
 {% if events %}
-<h4>Events</h4>
+<h4>Your Events</h4>
 <ul>
     {% for event in events %}
     <li><a href="/events/{{event.id}}">{{event.name}}</a> at <a href="/restaurants/{{event.restaurant_id}}">{{event.restaurant_name}}</a> on {{ event.start_time.strftime("%A %d. %m. %Y") }}</li>

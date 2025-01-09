@@ -118,14 +118,19 @@ def get_restaurants_list():
 
 
 def get_restaurants_by_id(restaurant_id: int):
-    sql = "SELECT r.id, r.name, r.account_id, a.name AS account_name, r.latitude, r.longitude, r.place_id, r.address, r.description FROM restaurants r JOIN accounts a ON r.account_id = a.id WHERE id = :restaurant_id AND active = TRUE"
+    sql = "SELECT r.id, r.name, r.account_id, a.firstname AS account_firstname, a.lastname AS account_lastname, \
+                r.latitude, r.longitude, r.place_id, r.address, r.description \
+            FROM restaurants r JOIN accounts a ON r.account_id = a.id \
+            WHERE r.id = :restaurant_id AND r.active = TRUE"
     return db.session.execute(text(sql), {"restaurant_id": restaurant_id}).fetchone()
 
 
 def get_restaurants_by_accountId(account_id: int):
     return db.session.execute(
         text(
-            "SELECT id, name, latitude, longitude, place_id, address FROM restaurants WHERE account_id = :account_id AND active = TRUE"
+            "SELECT id, name, latitude, longitude, place_id, address \
+            FROM restaurants \
+            WHERE account_id = :account_id AND active = TRUE"
         ),
         {"account_id": account_id},
     ).fetchall()
@@ -142,7 +147,8 @@ def create_restaurant(
 ):
     if not (name and account_id and address and lat and long and place_id):
         return None
-    sql = "INSERT INTO restaurants (active, name, account_id, address, latitude, longitude, place_id, description) VALUES (TRUE, :name, :account_id, :address, :lat, :long, :place_id, :description) RETURNING id"
+    sql = "INSERT INTO restaurants (active, name, account_id, address, latitude, longitude, place_id, description) \
+                            VALUES (TRUE, :name, :account_id, :address, :lat, :long, :place_id, :description) RETURNING id"
     ret = db.session.execute(
         text(sql),
         {
@@ -162,7 +168,9 @@ def create_restaurant(
 def get_accountId_by_restaurantId(restaurant_id: int):
     return db.session.execute(
         text(
-            "SELECT account_id FROM restaurants WHERE id=:restaurant_id AND active = TRUE"
+            "SELECT account_id \
+            FROM restaurants \
+            WHERE id=:restaurant_id AND active = TRUE"
         ),
         {"restaurant_id": restaurant_id},
     ).fetchone()
@@ -171,7 +179,9 @@ def get_accountId_by_restaurantId(restaurant_id: int):
 def update_restaurant_by_id(
     restaurant_id: int, name, address, latitude, longitude, place_id, description
 ):
-    sql = "UPDATE restaurants SET name=:name, address=:address, latitude=:latitude, longitude=:longitude, place_id=:place_id, description=:description WHERE id=:restaurant_id AND active = TRUE"
+    sql = "UPDATE restaurants \
+            SET name=:name, address=:address, latitude=:latitude, longitude=:longitude, place_id=:place_id, description=:description \
+            WHERE id=:restaurant_id AND active = TRUE"
     db.session.execute(
         text(sql),
         {
@@ -189,7 +199,11 @@ def update_restaurant_by_id(
 
 def delete_restaurant_by_id(restaurant_id: int):
     db.session.execute(
-        text("UPDATE restaurants SET active=FALSE WHERE restaurant_id=:restaurant_id"),
+        text(
+            "UPDATE restaurants \
+            SET active=FALSE \
+            WHERE restaurant_id=:restaurant_id"
+        ),
         {"restaurant_id": restaurant_id},
     )
     db.session.commit()
@@ -234,12 +248,16 @@ def get_events_all():
 
 
 def get_events_list():
-    sql = " SELECT e.id, e.name, e.restaurant_id, r.name AS restaurant_name FROM events e JOIN restaurants r ON e.restaurant_id = r.id AND active = TRUE"
+    sql = "SELECT e.id, e.name, e.restaurant_id, r.name AS restaurant_name \
+            FROM events e JOIN restaurants r ON e.restaurant_id = r.id \
+            WHERE active = TRUE"
     return db.session.execute(text(sql)).fetchall()
 
 
 def get_events_list_by_accountId(account_id: int):
-    sql = " SELECT e.id, e.name, e.start_time, e.end_time, e.restaurant_id, r.name AS restaurant_name FROM events e JOIN restaurants r ON e.restaurant_id = r.id WHERE e.account_id=:account_id"
+    sql = "SELECT e.id, e.name, e.start_time, e.end_time, e.restaurant_id, r.name AS restaurant_name \
+            FROM events e JOIN restaurants r ON e.restaurant_id = r.id \
+            WHERE e.account_id=:account_id OR r.account_id=:account_id"
     return db.session.execute(text(sql), {"account_id": account_id}).fetchall()
 
 
