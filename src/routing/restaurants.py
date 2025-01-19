@@ -3,6 +3,7 @@ from app import app
 from db_module import (
     get_buffets_by_restaurantId,
     get_events_by_restaurantId,
+    get_ratings_by_restaurantId,
     get_restaurants_all,
     get_restaurants_by_id,
     get_accountId_by_restaurantId,
@@ -23,8 +24,14 @@ def single_restaurant(restaurant_id):
     restaurant = get_restaurants_by_id(restaurant_id)
     events = get_events_by_restaurantId(restaurant_id)
     buffets = get_buffets_by_restaurantId(restaurant_id)
+    ratings = get_ratings_by_restaurantId(restaurant_id)
+    print(f"{ratings=}")
     return render_template(
-        "restaurants_single.html", restaurant=restaurant, events=events, buffets=buffets
+        "restaurants_single.html",
+        restaurant=restaurant,
+        events=events,
+        buffets=buffets,
+        ratings=ratings,
     )
 
 
@@ -41,9 +48,14 @@ def create_restaurant_endpoint():
     account_id = session["user_id"]
     name = request.form["name"]
     address = request.form["address"]
-    lat, long, place_id, error = validate_restaurant_data(name, account_id, address)
+    description = request.form["description"]
+    lat, long, place_id, error = validate_restaurant_data(
+        name, account_id, address, description
+    )
     if not error and lat and long and place_id:
-        ret = create_restaurant(name, account_id, address, lat, long, place_id)
+        ret = create_restaurant(
+            name, account_id, address, lat, long, place_id, description
+        )
         if ret:
             flash("Success: Restaurant created.")
             return redirect(f"/restaurants/{ret}")
@@ -99,12 +111,13 @@ def update_restaurant_endpoint(restaurant_id: int):
         if "user_id" in session and session["user_id"] == account_id:
             name = request.form["name"]
             address = request.form["address"]
+            description = request.form["description"]
             lat, long, place_id, error = validate_restaurant_data(
-                name, account_id, address
+                name, account_id, address, description
             )
             if lat and long and place_id and not error:
                 update_restaurant_by_id(
-                    restaurant_id, name, address, lat, long, place_id
+                    restaurant_id, name, address, lat, long, place_id, description
                 )
                 flash("Restaurant data updated.")
                 return redirect(f"/restaurants/{restaurant_id}")

@@ -30,7 +30,7 @@
 <h4>Your Events</h4>
 <ul>
     {% for event in events %}
-    <li><a href="/events/{{event.id}}">{{event.name}}</a> at <a href="/restaurants/{{event.restaurant_id}}">{{event.restaurant_name}}</a> on {{ event.start_time.strftime("%A %d. %m. %Y") }}</li>
+    <li><a href="/events/{{event.id}}">{{event.name}}</a> at <a href="/restaurants/{{event.restaurant_id}}">{{event.restaurant_name}}</a> on {{ event.start_time | output_date }}</li>
     {% endfor %}
 </ul>
 {% endif %}

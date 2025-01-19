@@ -12,4 +12,21 @@
 {% elif session.user_id %}
 <a href="/ratings/new?{{restaurant.id}}">Rate your visit here</a>
 {% endif %}
+{% if events %}
+<h3>Events</h3>
+<ul>
+{% for event in events %}
+    <li><a href="/events/{{event.id}}">{{event.name}}</a> on {{ event.start_time | output_date}}.</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if ratings %}
+<h3>Ratings</h3>
+<ul>
+{% for rating in ratings %}
+    <li><a href="/ratings/{{rating.id}}">{{rating.rating}}</a> by <a href="/accounts/{{rating.account_id}}">{{ rating.account_firstname or rating.account_lastname}}</a> on {{ rating.posted_on | output_datetime}}</li>
+{% endfor %}
+</ul>
+{% endif %}
 {% endblock %}
