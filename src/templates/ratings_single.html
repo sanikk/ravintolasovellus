@@ -2,6 +2,13 @@
 {% block title %}Single Rating Page{% endblock %}
 {% block content %}
 
+
+{{ rating.rating | output_rating_stars }}
+
+<p>On {{rating.posted_on | output_datetime }} {{rating | output_account_name }}<p>
+
+<p>{{rating.content }}</p>
+
 {% if session.user_id == rating.account_id %}
 <form action="/" method="GET"> 
 <button formaction="/restaurants/delete/{{rating.id}}" formmethod="POST">Delete</button>
