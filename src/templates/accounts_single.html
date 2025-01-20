@@ -39,7 +39,7 @@
 <h4>They have written the following reviews</h4>
 <ul>
     {% for rating in ratings %}
-    <li><a href="/ratings/{{rating.id}}">A rating of {{rating.rating}}</a> for restaurant <a href="/restaurants/{{rating.restaurant_id}}">{{rating.restaurant_name}}</a> on {{rating.posted_on}}</li> 
+    <li><a href="/ratings/{{rating.id}}">A rating of {{rating.rating | output_rating_stars}}</a> for restaurant <a href="/restaurants/{{rating.restaurant_id}}">{{rating.restaurant_name}}</a> on {{rating.posted_on}}</li> 
     {% endfor %}
 </ul>
 {% endif %}

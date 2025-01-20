@@ -25,7 +25,7 @@
 <h3>Ratings</h3>
 <ul>
 {% for rating in ratings %}
-    <li><a href="/ratings/{{rating.id}}">{{rating.rating}}</a> by <a href="/accounts/{{rating.account_id}}">{{ rating.account_firstname or rating.account_lastname}}</a> on {{ rating.posted_on | output_datetime}}</li>
+    <li><a href="/ratings/{{rating.id}}">{{rating.rating | output_rating_stars}}</a> by <a href="/accounts/{{rating.account_id}}">{{ rating.account_firstname or rating.account_lastname}}</a> on {{ rating.posted_on | output_datetime}}</li>
 {% endfor %}
 </ul>
 {% endif %}
