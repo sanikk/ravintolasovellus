@@ -230,6 +230,11 @@ def get_ratings_all():
     sql = "SELECT * FROM ratings WHERE active = TRUE"
     return db.session.execute(text(sql)).fetchall()
 
+def get_ratings_list():
+    sql = "SELECT rat.id, rat.rating, rat.account_id, acc.firstname AS account_firstname, acc.lastname AS account_lastname, rat.restaurant_id, res.name AS restaurant_name, rat.posted_on \
+        FROM ratings rat JOIN restaurants res ON rat.restaurant_id = res.id JOIN accounts acc ON rat.account_id = acc.id\
+        WHERE rat.active=TRUE"
+    return db.session.execute(text(sql)).fetchall()
 
 def get_ratings_by_id(rating_id: int):
     sql = "SELECT rat.*, res.name as restaurant_name, a.firstname AS account_firstname, a.lastname AS account_lastname \

@@ -1,10 +1,11 @@
 from flask import render_template, redirect, request
 from app import app
 from db_module import (
-    get_ratings_all,
+    # get_ratings_all,
     get_ratings_by_id,
     get_restaurants_all,
     get_restaurants_by_id,
+    get_ratings_list
 )
 
 #############################################
@@ -14,7 +15,7 @@ from db_module import (
 
 @app.route("/ratings")
 def ratings():
-    return render_template("ratings_list.html", ratings=get_ratings_all())
+    return render_template("ratings_list.html", ratings=get_ratings_list())
 
 
 @app.route("/ratings/<int:rating_id>")

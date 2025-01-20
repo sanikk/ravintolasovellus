@@ -5,9 +5,8 @@
 <p>Best restaurant app in the business!</p>
 <ul>
     {% for rat in ratings %}
-        <li>
-            <a href="/ratings/{{ rat[0] }}">{{ rat }}</a>
-        </li>
+    <li>{{rat | output_account_name }} rated <a href="/restaurants/{{rat.restaurant_id}}">{{ rat.restaurant_name }}</a> with <a href="/ratings/{{rat.id}}">{{rat.rating | output_rating_stars }}</a> on {{rat.posted_on | output_datetime}}
+    </li>
     {% endfor %}
 </ul>
 {% endblock %}

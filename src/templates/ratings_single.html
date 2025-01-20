@@ -2,10 +2,11 @@
 {% block title %}Single Rating Page{% endblock %}
 {% block content %}
 
+<h3>{{rating.restaurant_name}}</h3>
 
 {{ rating.rating | output_rating_stars }}
 
-<p>On {{rating.posted_on | output_datetime }} {{rating | output_account_name }}<p>
+<p>On {{rating.posted_on | output_datetime }} {{rating | output_account_name }} wrote:<p>
 
 <p>{{rating.content }}</p>
 
