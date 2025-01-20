@@ -5,6 +5,7 @@ import routing.accounts
 import routing.restaurants
 import routing.ratings
 import routing.events
+import routing.buffets
 
 from service.map_service import get_map
 

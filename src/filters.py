@@ -1,3 +1,6 @@
+# template filters used on the jinja pages. these are added in app.
+
+
 def output_date(the_date):
     return the_date.strftime("%A %d. %m. %Y")
 

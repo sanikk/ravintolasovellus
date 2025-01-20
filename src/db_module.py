@@ -1,4 +1,4 @@
-from datetime import date
+# from datetime import date
 from app import db
 from sqlalchemy import text
 
@@ -82,7 +82,7 @@ def update_account_by_id(
         valuedict["description"] = description
     valuedict["account_id"] = account_id
     sql += ",".join(param_list) + " WHERE id=:account_id AND active = TRUE RETURNING id"
-    print(f"{sql=}")
+    # print(f"{sql=}")
     ret = db.session.execute(text(sql), valuedict)
     db.session.commit()
     return ret
@@ -245,13 +245,16 @@ def get_ratings_by_accountId(account_id: int):
     return db.session.execute(text(sql), {"account_id": account_id}).fetchall()
 
 
+def get_ratings_by_restaurantId(restaurant_id: int):
+    sql = "SELECT ra.id, ra.account_id, a.firstname as account_firstname, a.lastname AS account_lastname, ra.restaurant_id, ra.posted_on, ra.rating \
+    FROM ratings ra JOIN accounts a ON ra.account_id = a.id \
+    WHERE restaurant_id=:restaurant_id AND ra.active=TRUE"
+    return db.session.execute(text(sql), {"restaurant_id": restaurant_id}).fetchall()
+
+
 #################################################
 # EVENTS                                        #
 #################################################
-
-# active=false not yet confirmed by venue owner
-# active=true confirmed by venue owner
-# deleted = deleted. by venue owner
 
 
 def get_events_all():

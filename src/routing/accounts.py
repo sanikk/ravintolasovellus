@@ -18,13 +18,6 @@ from service.validation_service import (
 # ACCOUNTS                      #
 #################################
 
-# Yeah not setting up real access control for admin account here. We can use psql.
-
-# @app.route("/accounts")
-# def accounts():
-#     accounts_list = get_accounts_all()
-#     return render_template("accounts_list.html", accounts=accounts_list)
-
 
 @app.route("/accounts/<int:account_id>")
 def accounts_single(account_id: int):

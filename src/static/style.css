@@ -19,6 +19,11 @@ form {
     margin: auto;
 }
 
+.fcheckbox {
+    display: flex;
+
+}
+
 .flash_message {
     font-size: 1.5em;
     color: #00ba37;

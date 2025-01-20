@@ -25,7 +25,6 @@ def single_restaurant(restaurant_id):
     events = get_events_by_restaurantId(restaurant_id)
     buffets = get_buffets_by_restaurantId(restaurant_id)
     ratings = get_ratings_by_restaurantId(restaurant_id)
-    print(f"{ratings=}")
     return render_template(
         "restaurants_single.html",
         restaurant=restaurant,

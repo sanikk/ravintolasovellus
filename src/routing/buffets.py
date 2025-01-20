@@ -1,6 +1,12 @@
-from flask import render_template, redirect, request
+from flask import render_template, redirect, request, session, flash
 from app import app
-from db_module import get_buffets_all, get_buffets_by_id, get_restaurants_all
+from db_module import (
+    create_buffet,
+    get_buffets_all,
+    get_buffets_by_id,
+    get_restaurants_all,
+)
+from service.validation_service import validate_buffet_data
 
 
 @app.route("/buffets")
@@ -20,11 +26,33 @@ def new_buffet_form():
     restaurant_id = request.args.get("restaurant_id")
     restaurants = get_restaurants_all()
     return render_template(
-        "buffets_new.html", restaurant_id=restaurant_id, restaurants=restaurants
+        "buffets_new.html",
+        restaurant_id=restaurant_id,
+        restaurants=restaurants,
+        form_data={},
     )
 
 
 @app.route("/buffets/create", methods=["POST"])
 def create_buffet_endpoint():
     # TODO: fill this
-    return redirect("/")
+    user_input = {
+        "name": request.form["name"],
+        "account_id": session.get("user_id", ""),
+        "restaurant_id": request.form["restaurant_id"],
+        "days": request.form.getlist("days"),
+        "start_time": request.form["start_time"],
+        "end_time": request.form["end_time"],
+        "price": request.form["price"],
+        "description": request.form["description"],
+    }
+    error = validate_buffet_data(user_input)
+    if not error:
+        ret = create_buffet(**user_input)
+        if ret:
+            return redirect(f"/buffets/{ret}")
+        flash(
+            "Error: Something went wrong creating the buffet. No return value from db"
+        )
+    [flash(err) for err in error]
+    return render_template("buffets_new", form_data=request.form)

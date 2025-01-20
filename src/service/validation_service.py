@@ -1,4 +1,12 @@
-from db_module import get_account_by_id, get_account_by_username, check_account_email
+from datetime import time
+
+from db_module import (
+    get_account_by_id,
+    get_account_by_username,
+    check_account_email,
+    get_accountId_by_restaurantId,
+    get_restaurants_by_id,
+)
 from service.convert_address import get_lat_long_placeid
 from werkzeug.security import check_password_hash, generate_password_hash
 import re
@@ -75,6 +83,49 @@ def validate_account_data(
             "Error: Your tagline can't be over 500 characters. Please condense it."
         )
     return password_hash, error
+
+
+def validate_buffet_data(user_input: dict):
+    error = []
+    if not "name" in user_input or not 3 < len(user_input["name"]) < 65:
+        error.append("Error: Name needs to be 4-64 characters long")
+
+    if not "account_id" in user_input or not get_account_by_id(
+        user_input["account_id"]
+    ):
+        error.append("Error: You should be logged in with a valid user account")
+
+    if "restaurant_id" in user_input:
+        ret = get_accountId_by_restaurantId(user_input["restaurant_id"])
+        if not ret or ret != user_input["account_id"]:
+            error.append("Error: Please choose a restaurant you are admin of")
+    else:
+        error.append("Error: Please choose a restaurant you are admin of")
+
+    if (
+        not "days" in user_input
+        or not user_input["days"]
+        or not 0 < len(user_input["days"]) < 8
+    ):
+        error.append("Error: Please choose at least one day")
+
+    if not "start_time" in user_input or not time(0, 0, 0) < user_input[
+        "start_time"
+    ] < time(24, 0, 0):
+        error.append("Error: Please choose a valid starting time")
+
+    if not "end_time" in user_input or not time(0, 0, 0) < user_input[
+        "end_time"
+    ] < time(24, 0, 0):
+        error.append("Error: Please choose a valid ending time")
+
+    if not "price" in user_input or not 0 < int(user_input["price"]):
+        error.append("Error: Please choose a valid price")
+
+    if not "description" in user_input or 2 < len(user_input["description"]) < 501:
+        error.append("Error: Description should be between 3-500 characters long")
+
+    return error
 
 
 def check_username_and_password(username: str, password: str):
