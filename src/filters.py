@@ -30,4 +30,8 @@ def output_full_name(row):
     return f"{row._mapping.get("firstname", "")} {row._mapping.get("lastname", "")}".strip()
 
 
+def zip_filter(a, b):
+    return zip(a, b)
+
+
 # <a target="_blank" href="https://icons8.com/icon/104/star">Star</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>

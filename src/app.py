@@ -5,10 +5,11 @@ from filters import (
     output_rating_stars,
     output_account_name,
     output_full_name,
+    zip_filter,
 )
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from calendar import calendar, day_name
+from calendar import day_name
 
 
 app = Flask(__name__)
@@ -25,6 +26,7 @@ app.add_template_filter(output_datetime, "output_datetime")
 app.add_template_filter(output_rating_stars, "output_rating_stars")
 app.add_template_filter(output_account_name, "output_account_name")
 app.add_template_filter(output_full_name, "output_full_name")
+app.add_template_filter(zip_filter, "zip")
 
 
 # add constants to be used on jinja2 templates
