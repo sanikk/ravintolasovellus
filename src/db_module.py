@@ -19,7 +19,9 @@ def create_user(
 ):
     if not (username and password_hash):
         return None
-    sql = "INSERT INTO accounts (active, username, password, email, billing_info, firstname, lastname, description) VALUES (TRUE, :username, :password, :email, :billing_info, :firstname, :lastname, :description) RETURNING id"
+    sql = "INSERT INTO accounts (active, username, password, email, billing_info, firstname, lastname, description) \
+            VALUES (TRUE, :username, :password, :email, :billing_info, :firstname, :lastname, :description) \
+            RETURNING id"
     ret = db.session.execute(
         text(sql),
         {
@@ -185,7 +187,7 @@ def get_accountId_by_restaurantId(restaurant_id: int):
             WHERE id=:restaurant_id AND active = TRUE"
         ),
         {"restaurant_id": restaurant_id},
-    ).fetchone()
+    ).scalar()
 
 
 def update_restaurant_by_id(
@@ -230,11 +232,14 @@ def get_ratings_all():
     sql = "SELECT * FROM ratings WHERE active = TRUE"
     return db.session.execute(text(sql)).fetchall()
 
+
 def get_ratings_list():
-    sql = "SELECT rat.id, rat.rating, rat.account_id, acc.firstname AS account_firstname, acc.lastname AS account_lastname, rat.restaurant_id, res.name AS restaurant_name, rat.posted_on \
-        FROM ratings rat JOIN restaurants res ON rat.restaurant_id = res.id JOIN accounts acc ON rat.account_id = acc.id\
-        WHERE rat.active=TRUE"
+    sql = "SELECT rat.id, rat.rating, rat.account_id, acc.firstname AS account_firstname, \
+                acc.lastname AS account_lastname, rat.restaurant_id, res.name AS restaurant_name, rat.posted_on \
+            FROM ratings rat JOIN restaurants res ON rat.restaurant_id = res.id JOIN accounts acc ON rat.account_id = acc.id\
+            WHERE rat.active=TRUE"
     return db.session.execute(text(sql)).fetchall()
+
 
 def get_ratings_by_id(rating_id: int):
     sql = "SELECT rat.*, res.name as restaurant_name, a.firstname AS account_firstname, a.lastname AS account_lastname \
@@ -244,16 +249,22 @@ def get_ratings_by_id(rating_id: int):
 
 
 def get_ratings_by_accountId(account_id: int):
-    sql = "SELECT rat.id, rat.restaurant_id, rat.rating, TO_CHAR(rat.posted_on, 'DD.MM.YYYY HH24:MM:SS') AS posted_on, res.name AS restaurant_name \
-            FROM ratings rat JOIN restaurants res ON rat.restaurant_id = res.id \
-            WHERE rat.account_id = :account_id AND rat.active = TRUE"
-    return db.session.execute(text(sql), {"account_id": account_id}).fetchall()
+    sql = "WITH last_reviews AS (SELECT rat.id, rat.restaurant_id, res.name as restaurant_name, TO_CHAR(rat.posted_on, 'DD.MM.YYYY HH24:MM:SS') AS posted_on, rat.rating \
+            FROM ratings rat JOIN restaurants res ON rat.restaurant_id = res.id WHERE rat.account_id=:account_id ORDER BY rat.posted_on LIMIT 10) \
+                SELECT (SELECT COUNT(rating) FROM ratings WHERE account_id=:account_id) AS total_reviews, \
+                       (SELECT COALESCE(AVG(rating), 0) FROM ratings WHERE account_id=:account_id) AS average_rating, \
+                        json_agg(last_reviews.*) AS last_reviews \
+                FROM last_reviews"
+    #     sql = "SELECT rat.id, rat.restaurant_id, rat.rating, rat.posted_on, res.name AS restaurant_name \
+    #             FROM ratings rat JOIN restaurants res ON rat.restaurant_id = res.id \
+    #             WHERE rat.account_id = :account_id AND rat.active = TRUE"
+    return db.session.execute(text(sql), {"account_id": account_id}).fetchone()
 
 
 def get_ratings_by_restaurantId(restaurant_id: int):
     sql = "SELECT ra.id, ra.account_id, a.firstname as account_firstname, a.lastname AS account_lastname, ra.restaurant_id, ra.posted_on, ra.rating \
-    FROM ratings ra JOIN accounts a ON ra.account_id = a.id \
-    WHERE restaurant_id=:restaurant_id AND ra.active=TRUE"
+        FROM ratings ra JOIN accounts a ON ra.account_id = a.id \
+        WHERE restaurant_id=:restaurant_id AND ra.active=TRUE"
     return db.session.execute(text(sql), {"restaurant_id": restaurant_id}).fetchall()
 
 
@@ -308,7 +319,9 @@ def create_event(
 ):
     if not (name and account_id):
         return None
-    sql = "INSERT INTO events (name, restaurant_id, account_id, start_time, end_time, description) VALUES (:name, :restaurant_id, :account_id, :start_time, :end_time, :description) RETURNING id"
+    sql = "INSERT INTO events (name, restaurant_id, account_id, start_time, end_time, description) \
+            VALUES (:name, :restaurant_id, :account_id, :start_time, :end_time, :description) \
+            RETURNING id"
     ret = db.session.execute(
         text(sql),
         {
@@ -337,7 +350,9 @@ def get_buffets_all():
 
 def get_buffets_by_id(buffet_id: int):
     return db.session.execute(
-        text("SELECT * FROM buffets WHERE id=:buffet_id AND active = TRUE"),
+        text(
+            "SELECT b.*,r.name as restaurant_name,r.account_id FROM buffets b JOIN restaurants r ON b.restaurant_id = r.id WHERE b.id=:buffet_id AND b.active = TRUE"
+        ),
         {"buffet_id": buffet_id},
     ).fetchone()
 
@@ -351,18 +366,25 @@ def get_buffets_by_restaurantId(restaurant_id: int):
     ).fetchall()
 
 
-def create_buffet(name, restaurant_id, start_time, end_time, days):
-    sql = "INSERT INTO buffets (name, restaurant_id, start_time, end_time, days) \
-        VALUES (:name, :restaurant_id, :start_time, :end_time, :days) RETURNING id"
+def create_buffet(
+    name, account_id, restaurant_id, days, starttime, endtime, price, description
+):
+    # return None
+    sql = "INSERT INTO buffets (name, restaurant_id, starttime, endtime, monday, tuesday,wednesday, thursday, friday, saturday, sunday, price, description) \
+            VALUES (:name, :restaurant_id, :starttime, :endtime, :Monday, :Tuesday, :Wednesday, :Thursday, :Friday, :Saturday, :Sunday, :price, :description) \
+            RETURNING id"
     ret = db.session.execute(
         text(sql),
         {
             "name": name,
+            "account_id": account_id,
             "restaurant_id": restaurant_id,
-            "start_time": start_time,
-            "end_time": end_time,
-            "days": days,
+            "starttime": starttime,
+            "endtime": endtime,
+            **days,
+            "price": price,
+            "description": description,
         },
     )
-    db.commit()
+    db.session.commit()
     return ret.scalar()

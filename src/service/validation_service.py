@@ -5,7 +5,6 @@ from db_module import (
     get_account_by_username,
     check_account_email,
     get_accountId_by_restaurantId,
-    get_restaurants_by_id,
 )
 from service.convert_address import get_lat_long_placeid
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -108,21 +107,20 @@ def validate_buffet_data(user_input: dict):
         or not 0 < len(user_input["days"]) < 8
     ):
         error.append("Error: Please choose at least one day")
-
-    if not "start_time" in user_input or not time(0, 0, 0) < user_input[
-        "start_time"
-    ] < time(24, 0, 0):
+    if not "starttime" in user_input or not time(0, 0, 0) <= time.fromisoformat(
+        user_input["starttime"]
+    ) <= time(23, 59, 59):
         error.append("Error: Please choose a valid starting time")
 
-    if not "end_time" in user_input or not time(0, 0, 0) < user_input[
-        "end_time"
-    ] < time(24, 0, 0):
+    if not "endtime" in user_input or not time(0, 0, 0) <= time.fromisoformat(
+        user_input["endtime"]
+    ) <= time(23, 59, 59):
         error.append("Error: Please choose a valid ending time")
 
     if not "price" in user_input or not 0 < int(user_input["price"]):
         error.append("Error: Please choose a valid price")
 
-    if not "description" in user_input or 2 < len(user_input["description"]) < 501:
+    if not "description" in user_input or not 2 < len(user_input["description"]) < 501:
         error.append("Error: Description should be between 3-500 characters long")
 
     return error

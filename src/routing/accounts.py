@@ -21,15 +21,19 @@ from service.validation_service import (
 
 @app.route("/accounts/<int:account_id>")
 def accounts_single(account_id: int):
-    if "user_id" not in session or session["user_id"] != account_id:
-        flash("Error: You are not logged in as the owner of this account.")
-        return redirect("/")
     account = get_account_by_id(account_id)
     restaurants = get_restaurants_by_accountId(account_id)
     events = get_events_list_by_accountId(account_id)
     ratings = get_ratings_by_accountId(account_id)
+    account_page = ""
+
+    if "user_id" not in session or session["user_id"] != account_id:
+        account_page = "accounts_single_public.html"
+    else:
+        account_page = "accounts_single_private.html"
+
     return render_template(
-        "accounts_single.html",
+        account_page,
         account=account,
         restaurants=restaurants,
         events=events,

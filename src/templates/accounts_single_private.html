@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}Single account page{% endblock %}
 {% block content %}
-<h2>{{ account.firstname }} {{account.lastname}}</h2>
+<h2>{{ account | output_full_name }}</h2>
 
 
 <p>Your public tagline is:<br>
@@ -35,11 +35,12 @@
 </ul>
 {% endif %}
 
-{% if ratings %}
-<h4>They have written the following reviews</h4>
+{% if ratings and ratings[0] > 0 %}
+<h4>Your last reviews</h4>
+<p>You have written a total of {{ratings[0]}} reviews with an average rating of {{"%.02f" | format(ratings[1])}}.</p>
 <ul>
-    {% for rating in ratings %}
-    <li><a href="/ratings/{{rating.id}}">A rating of {{rating.rating | output_rating_stars}}</a> for restaurant <a href="/restaurants/{{rating.restaurant_id}}">{{rating.restaurant_name}}</a> on {{rating.posted_on}}</li> 
+    {% for rating in ratings[2] %}
+    <li><a href="/ratings/{{rating.id}}">A rating of {{rating.rating | output_rating_stars}}</a> for restaurant <a href="/restaurants/{{rating.restaurant_id}}">{{rating.restaurant_name}}</a> on {{rating.posted_on }}</li> 
     {% endfor %}
 </ul>
 {% endif %}
