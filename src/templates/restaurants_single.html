@@ -4,6 +4,8 @@
 <h2>{{ restaurant.name }}</h2>
 <p>{{ restaurant.name }} at {{ restaurant.address }} [{{ restaurant.latitude }}, {{ restaurant.longitude }}] is very nice!</p>
 
+<p>{{restaurant.description or ''}}</p>
+
 {% if session.user_id == restaurant.account_id %}
 <form action="/" method="GET"> 
 <button formaction="/restaurants/delete/{{restaurant.id}}" formmethod="POST">Delete</button>
