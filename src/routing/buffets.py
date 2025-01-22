@@ -7,6 +7,7 @@ from db_module import (
     get_restaurants_all,
 )
 from service.validation_service import validate_buffet_data
+from calendar import day_name
 
 
 @app.route("/buffets")
@@ -35,14 +36,14 @@ def new_buffet_form():
 
 @app.route("/buffets/create", methods=["POST"])
 def create_buffet_endpoint():
-    # TODO: fill this
+    chosen_days = request.form.getlist("days")
     user_input = {
         "name": request.form["name"],
         "account_id": session.get("user_id", ""),
         "restaurant_id": request.form["restaurant_id"],
-        "days": request.form.getlist("days"),
-        "start_time": request.form["start_time"],
-        "end_time": request.form["end_time"],
+        "days": {day: (day in chosen_days) for day in day_name},
+        "starttime": request.form["starttime"],
+        "endtime": request.form["endtime"],
         "price": request.form["price"],
         "description": request.form["description"],
     }
@@ -55,4 +56,6 @@ def create_buffet_endpoint():
             "Error: Something went wrong creating the buffet. No return value from db"
         )
     [flash(err) for err in error]
-    return render_template("buffets_new", form_data=request.form)
+    return render_template(
+        "buffets_new.html", form_data=request.form, restaurants=get_restaurants_all()
+    )

@@ -108,6 +108,7 @@ def create_tables():
         sunday BOOL,
         starttime TIME,
         endtime TIME,
+        price INTEGER,
         description VARCHAR(500)
     )"""
     cur.execute(sql)

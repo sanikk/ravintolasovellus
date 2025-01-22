@@ -11,11 +11,11 @@
     </select>
     <div class="fcheckbox">
     {% for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
-    <input type="checkbox" name="days" value=loop.index1>{{day}}</input>
+        <input type="checkbox" name="days" value={{day}}>{{day}}</input>
     {% endfor %}
     </div>
-    <label class="flabel">Starts at</label><input type="text" id="timePicker" class="finput" name="start_time" value="{{form_data.get("start_time", "")}}"/>
-    <label class="flabel">Ends at</label><input type="text" id="timePicker" class="finput" name="end_time" value="{{form_data.get("end_time", "")}}" />
+    <label class="flabel">Starts at</label><input type="text" id="timePicker" class="finput" name="starttime" value="{{form_data.get("starttime", "")}}"/>
+    <label class="flabel">Ends at</label><input type="text" id="timePicker" class="finput" name="endtime" value="{{form_data.get("endtime", "")}}" />
     <label class="flabel">Price</label><input type="text" class="finput" name="price" value="{{form_data.get("price", "")}}" /> €
     <label class="flabel">Description</label><textarea class="finput" rows="5" maxlength="500" name="description" value="{{form_data.get("description", "")}}"></textarea>
     <button class="fbutton" type="submit">Submit</button>

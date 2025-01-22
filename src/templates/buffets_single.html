@@ -1,10 +1,24 @@
 {% extends "layout.html" %}
 {% block title %}Single Rating Page{% endblock %}
 {% block content %}
-{% if session.user_id == r.account_id %}
+{{ buffet }}
+<h3>{{buffet.name}}</h3>
+<p>
+{{ buffet.description or ''}}
+</p>
+<p>
+Price: {{ buffet.price or 'Not published' }}
+</p>
+<p>
+    Venue: <a href="/restaurants/{{buffet.restaurant_id}}">{{ buffet.restaurant_name }}</a>
+</p>
+{% for day_name, is_open in weekdays | zip(buffet[4:11]) %}
+<div>{{day_name}}: {% if is_open %} {{buffet.starttime}} - {{ buffet.endtime }} {% else %}Closed{% endif %}</div>
+{% endfor %}
+{% if session.user_id == buffet.account_id %}
 <form action="/" method="GET"> 
-<button formaction="/r/delete/{{r.id}}" formmethod="POST">Delete</button>
-<button formaction="/r/edit/{{r.id}}" formmethod="GET">Edit details</button>
+<button formaction="/buffets/delete/{{buffet.id}}" formmethod="POST">Delete</button>
+<button formaction="/buffets/edit/{{buffet.id}}" formmethod="GET">Edit details</button>
 </form>
 {% endif %}
 {% endblock %}
