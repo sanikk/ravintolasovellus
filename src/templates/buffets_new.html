@@ -10,7 +10,7 @@
     {% endfor %}
     </select>
     <div class="fcheckbox">
-    {% for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
+    {% for day in weekday %}
         <input type="checkbox" name="days" value={{day}}>{{day}}</input>
     {% endfor %}
     </div>

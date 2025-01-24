@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Add Buffet{% endblock %}
+{% block content %}
+<h2>Add a new Buffet</h2>
+<form action="/buffets/create" method="POST">
+    <label class="flabel">Buffet Name</label> <input class="finput" type="text" name="name" value="{{ form_data.get("name", "") }}" />
+    <label class="flabel">Buffet Venue</label> <select class="finput" name="restaurant_id" value="{{ form_data.get("restaurant_id", "")}}" />
+    {% for restaurant in restaurants %}
+        <option value="{{restaurant.id}}">{{restaurant.name}}</option>
+    {% endfor %}
+    </select>
+    <div class="fcheckbox">
+    {% for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
+        <input type="checkbox" name="days" value={{day}}>{{day}}</input>
+    {% endfor %}
+    </div>
+    <label class="flabel">Starts at</label><input type="text" id="timePicker" class="finput" name="starttime" value="{{form_data.get("starttime", "")}}"/>
+    <label class="flabel">Ends at</label><input type="text" id="timePicker" class="finput" name="endtime" value="{{form_data.get("endtime", "")}}" />
+    <label class="flabel">Price</label><input type="text" class="finput" name="price" value="{{form_data.get("price", "")}}" /> €
+    <label class="flabel">Description</label><textarea class="finput" rows="5" maxlength="500" name="description" value="{{form_data.get("description", "")}}"></textarea>
+    <button class="fbutton" type="submit">Submit</button>
+</form>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    flatpickr("#timePicker", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true,
+    });
+</script>
+
+{% endblock %}
