@@ -1,6 +1,7 @@
 # from datetime import date
 from app import db
 from sqlalchemy import text
+from calendar import day_name
 
 #################################
 # ACCOUNTS                      #
@@ -122,6 +123,7 @@ def delete_user_by_id(account_id: int):
 
 
 def get_restaurants_all():
+    # TODO: this should go away
     sql = "SELECT * FROM restaurants WHERE active = TRUE"
     return db.session.execute(text(sql)).fetchall()
 
@@ -132,8 +134,11 @@ def get_restaurants_list():
 
 
 def get_restaurants_by_id(restaurant_id: int):
+    # TODO: dynamicize this. i know that's not a word but it looks funny.
     sql = "SELECT r.id, r.name, r.account_id, a.firstname AS account_firstname, a.lastname AS account_lastname, \
-                r.latitude, r.longitude, r.place_id, r.address, r.description \
+                r.latitude, r.longitude, r.place_id, r.address, r.description, \
+                r.mondaystart, r.mondayend, r.tuesdaystart, r.tuesdayend, r.wednesdaystart, r.wednesdayend, r.thursdaystart, \
+                r.thursdayend, r.fridaystart, r.fridayend, r.saturdaystart, r.saturdayend, r.sundaystart, r.sundayend \
             FROM restaurants r JOIN accounts a ON r.account_id = a.id \
             WHERE r.id = :restaurant_id AND r.active = TRUE"
     return db.session.execute(text(sql), {"restaurant_id": restaurant_id}).fetchone()
@@ -158,11 +163,19 @@ def create_restaurant(
     long: float,
     place_id: int,
     description: str,
+    opening_hours: dict,
 ):
     if not (name and account_id and address and lat and long and place_id):
         return None
-    sql = "INSERT INTO restaurants (active, name, account_id, address, latitude, longitude, place_id, description) \
-                            VALUES (TRUE, :name, :account_id, :address, :lat, :long, :place_id, :description) RETURNING id"
+    sql = (
+        "INSERT INTO restaurants (active, name, account_id, address, latitude, longitude, place_id, description, "
+        + ",".join(
+            [f"{day.lower()}{time}" for day in day_name for time in ["start", "end"]]
+        )
+        + "VALUES (TRUE, :name, :account_id, :address, :lat, :long, :place_id, :description, "
+        + ",".join([f":{day}{time}" for day in day_name for time in ["start", "end"]])
+        + " RETURNING id"
+    )
     ret = db.session.execute(
         text(sql),
         {
@@ -173,6 +186,7 @@ def create_restaurant(
             "long": long,
             "place_id": place_id,
             "description": description,
+            **opening_hours,
         },
     )
     db.session.commit()
@@ -191,22 +205,53 @@ def get_accountId_by_restaurantId(restaurant_id: int):
 
 
 def update_restaurant_by_id(
-    restaurant_id: int, name, address, latitude, longitude, place_id, description
+    restaurant_id: int,
+    name,
+    address,
+    latitude,
+    longitude,
+    place_id,
+    description,
+    opening_hours,
 ):
     sql = "UPDATE restaurants \
             SET name=:name, address=:address, latitude=:latitude, longitude=:longitude, place_id=:place_id, description=:description \
             WHERE id=:restaurant_id AND active = TRUE"
+
+    sql = "UPDATE restaurants SET"
+    paramlist = []
+    paramdict = {"id": restaurant_id}
+    print(f"{opening_hours=}")
+    if name:
+        paramlist.append(" name=:name")
+        paramdict["name"] = name
+    if address:
+        paramlist.append(" address=:address")
+        paramdict["address"] = address
+    if latitude:
+        paramlist.append(" latitude=:latitude")
+        paramdict["latitude"] = latitude
+    if longitude:
+        paramlist.append(" longitude=:longitude")
+        paramdict["longitude"] = longitude
+    if place_id:
+        paramlist.append(" place_id=:place_id")
+        paramdict["place_id"] = place_id
+    if description:
+        paramlist.append(" description=:description")
+        paramdict["description"] = description
+
+    if any(value is not None for value in opening_hours.values()):
+        for entry in [
+            f"{day.lower()}{time}" for day in day_name for time in ["start", "end"]
+        ]:
+            if opening_hours[entry]:
+                paramlist.append(f" {entry}=:{entry}")
+                paramdict[entry] = opening_hours[entry]
+
     db.session.execute(
-        text(sql),
-        {
-            "restaurant_id": restaurant_id,
-            "name": name,
-            "address": address,
-            "latitude": latitude,
-            "longitude": longitude,
-            "place_id": place_id,
-            "description": description,
-        },
+        text(sql + ",".join(paramlist) + " WHERE id=:id AND ACTIVE=TRUE"),
+        {**paramdict},
     )
     db.session.commit()
 
@@ -369,7 +414,7 @@ def get_buffets_by_restaurantId(restaurant_id: int):
 def create_buffet(
     name, account_id, restaurant_id, days, starttime, endtime, price, description
 ):
-    # return None
+    # TODO: clean this up
     sql = "INSERT INTO buffets (name, restaurant_id, starttime, endtime, monday, tuesday,wednesday, thursday, friday, saturday, sunday, price, description) \
             VALUES (:name, :restaurant_id, :starttime, :endtime, :Monday, :Tuesday, :Wednesday, :Thursday, :Friday, :Saturday, :Sunday, :price, :description) \
             RETURNING id"
@@ -388,3 +433,37 @@ def create_buffet(
     )
     db.session.commit()
     return ret.scalar()
+
+
+def update_buffet(
+    id, name, account_id, restaurant_id, days, starttime, endtime, price, description
+):
+
+    sql = "UPDATE buffets SET"
+    paramdict = {"id": id}
+    if name:
+        sql += " name=:name"
+        paramdict["name"] = name
+    if restaurant_id:
+        sql += " restaurant_id=:restaurant_id"
+        paramdict["restaurant_id"] = restaurant_id
+    if days:
+        # TODO: clean this up
+        sql += " monday=:monday, tuesday=:tuesday, wednesday=:wednesday, thursday=:thursday, friday=:friday, saturday=:saturday, sunday=:sunday"
+        paramdict.update(days)
+    if starttime:
+        sql += " starttime=:starttime"
+        paramdict["starttime"] = starttime
+    if endtime:
+        sql += " endtime=:endtime"
+        paramdict["endtime"] = endtime
+    if price:
+        sql += " price=:price"
+        paramdict["price"] = price
+    if description:
+        sql += " description=:description"
+        paramdict["description"] = description
+    sql += " WHERE id=:id AND active=TRUE RETURNING id"
+    ret = db.session.execute(text(sql), paramdict)
+    db.session.commit()
+    return ret

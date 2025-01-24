@@ -53,7 +53,7 @@ def create_tables():
         description VARCHAR(500)
     )"""
     cur.execute(sql)
-
+    # TODO: make this dynamic
     sql = """CREATE TABLE IF NOT EXISTS restaurants (
         id SERIAL PRIMARY KEY,
         active BOOL DEFAULT TRUE,
@@ -63,7 +63,21 @@ def create_tables():
         longitude FLOAT,
         place_id VARCHAR(20),
         address VARCHAR(128),
-        description VARCHAR(500)
+        description VARCHAR(500),
+        mondaystart TIME,
+        mondayend TIME,
+        tuesdaystart TIME,
+        tuesdayend TIME,
+        wednesdaystart TIME,
+        wednesdayend TIME,
+        thursdaystart TIME,
+        thursdayend TIME,
+        fridaystart TIME,
+        fridayend TIME,
+        saturdaystart TIME,
+        saturdayend TIME,
+        sundaystart TIME,
+        sundayend TIME
     )"""
     cur.execute(sql)
     sql = """CREATE INDEX idx_account_active ON restaurants (account_id, active);"""
@@ -93,7 +107,7 @@ def create_tables():
     )"""
     cur.execute(sql)
     # event_date DATE,
-
+    # TODO: make this dynamic:
     sql = """CREATE TABLE IF NOT EXISTS buffets (
         id SERIAL PRIMARY KEY,
         active BOOL DEFAULT TRUE,
@@ -133,30 +147,6 @@ def create_tables():
     )"""
     cur.execute(sql)
 
-    #     sql = """CREATE TABLE IF NOT EXISTS specialities (
-    #         id SERIAL PRIMARY KEY,
-    #         name TEXT
-    #     )"""
-    #     cur.execute(sql)
-    #
-    #     sql = """CREATE TABLE IF NOT EXISTS speciality_restaurants (
-    #         restaurant_id INTEGER REFERENCES restaurants(id),
-    #         speciality_id INTEGER REFERENCES specialities(id)
-    #     )"""
-    #     cur.execute(sql)
-
-    #     ADMIN_USERNAME = input("Please enter an admin username: ")
-    #     ADMIN_PASSWORD = input("Please enter an admin password: ")
-    #     if (
-    #         ADMIN_USERNAME
-    #         and ADMIN_PASSWORD
-    #         and 4 < len(ADMIN_USERNAME) < 17
-    #         and 4 < len(ADMIN_PASSWORD) < 33
-    #     ):
-    #         cur.execute(
-    #             """INSERT INTO account (username, password) VALUES (%s, %s)""",
-    #             (ADMIN_USERNAME, generate_password_hash(ADMIN_PASSWORD)),
-    #         )
     print("Database has been built")
     conn.commit()
     cur.close()

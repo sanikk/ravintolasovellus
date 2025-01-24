@@ -6,6 +6,25 @@
 
 <p>{{restaurant.description or ''}}</p>
 
+
+<h4>Opening hours</h4>
+<table>
+    <thead>
+        <th>Day</th>
+        <th>Opens at</th>
+        <th>Closes at</th>
+    </thead>
+    <tbody>
+        {% for day in weekdays %}
+        <tr>
+            <td>{{day}}</td>
+            <td>{{restaurant[day.lower() + 'start'] or ''}}</td>
+            <td>{{restaurant[day.lower() + 'end'] or ''}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {% if session.user_id == restaurant.account_id %}
 <form action="/" method="GET"> 
 <button formaction="/restaurants/delete/{{restaurant.id}}" formmethod="POST">Delete</button>

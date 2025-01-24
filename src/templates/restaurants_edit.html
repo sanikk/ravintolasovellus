@@ -1,19 +1,49 @@
 {% extends "layout.html" %}
 {% block title %}Restaurants{% endblock %}
 {% block content %}
-<h2>Add new Restaurant</h2>
-<p>Edit your Best Restaurant in the Best Restaurant App in the business!</p>
-<form action="/restaurants/update/{{restaurant_id}}" method="POST">
-    <label class="flabel">Restaurant Name</label> <input class="finput" type="text" name="name" value="{{ form_data.get("name", "") }}">
-    <label class="flabel">Restaurant Address</label> <input class="finput" type="text" name="address" value="{{ form_data.get("address","") }}">
+<h2>Edit Restaurant</h2>
+<form action="/restaurants/update" method="POST">
+    <label class="flabel">Restaurant Name</label> <input class="finput" type="text" name="name" placeholder="{{restaurant.name}}" value="{{ form_data.get("name", "") }}">
+    <label class="flabel">Restaurant Address</label> <input class="finput" type="text" name="address" placeholder="{{restaurant.address}}" value="{{ form_data.get("address","") }}">
     <label class="flabel">Restaurant city</label> Helsinki<br>
+    <h4>Opening hours</h4>
+    <table>
+        <thead>
+            <th>Day</th>
+            <th>Opens at</th>
+            <th>Closes at</th>
+        </thead>
+        <tbody>
+            {% for day in weekdays %}
+            <tr>
+                <td>{{day}}</td>
+                <td><input type="text" id="timePicker" name="{{day.lower()}}start" placeholder="{{restaurant[day.lower() + 'start'] or ''}}"
+                    value="{{form_data.get("{{day.lower()}}start", "")}}"/></td>
+                <td><input type="text" id="timePicker" name="{{day.lower()}}end" placeholder="{{restaurant[day.lower() + 'end'] or ''}}"
+                    value="{{form_data.get("{{day.lower()}}end", "")}}"/></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     <row class="fbutton">
         <button formaction="/restaurants/{{restaurant_id}}" formmethod="GET">Cancel</button>
         <button type="submit">Submit</button>
     </row>
+    <input type="hidden" name="id" value="{{restaurant.id}}">
 </form>
 <br>
 <p>If there has been a change of ownership please contact site administrator.<br>
     For security reasons we will not provide a list of accounts to users.</p>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    flatpickr("#timePicker", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true,
+    });
+</script>
 {% endblock %}

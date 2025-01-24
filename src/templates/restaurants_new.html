@@ -7,8 +7,37 @@
     <label class="flabel">Restaurant Name</label> <input class="finput" type="text" name="name">{{ form_data.get("name", "") }}
     <label class="flabel">Restaurant Address</label> <input class="finput" type="text" name="address">{{ form_data.get("address", "") }}
     <label class="flabel">Description</label> <textarea class="finput" name="description" rows="5" maxlength="500"></textarea>
+
+    <h4>Opening hours</h4>
+    <table>
+        <thead>
+            <th>Day</th>
+            <th>Opens at</th>
+            <th>Closes at</th>
+        </thead>
+        <tbody>
+            {% for day in weekdays %}
+            <tr>
+                <td>{{day}}</td>
+                <td><input type="text" id="timePicker" name="{{day.lower()}}start" value="{{form_data.get("{{day.lower()}}start", "")}}"/></td>
+                <td><input type="text" id="timePicker" name="{{day.lower()}}end" value="{{form_data.get("{{day.lower()}}end", "")}}"/></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     <button class="fbutton" type="submit">Submit</button>
 </form>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    flatpickr("#timePicker", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true,
+    });
+</script>
 
 {% endblock %}
