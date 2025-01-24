@@ -60,14 +60,14 @@
     ></textarea>
 
     <label class="flabel">New Password </label>
-    <input class="finput" type="password" name="newpassword1">
+    <input class="finput" type="password" name="newpassword1" autocomplete="new-password">
 
     <label class="flabel">New password again </label> 
-    <input class="finput" type="password" name="newpassword2">
+    <input class="finput" type="password" name="newpassword2" autocomplete="new-password">
+
     <hr>
     <label class="flabel">Old Password to Confirm</label>   
-    <input class="finput" type="password" name="oldpassword">
-
+    <input class="finput" type="password" name="oldpassword" autocomplete="current-password">
     <row class="fbutton">
         <button formaction="/accounts/{{account.id}}" formmethod="GET">Cancel</button>
         <button type="submit">Submit changes</button>

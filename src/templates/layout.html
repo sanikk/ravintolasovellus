@@ -36,7 +36,7 @@
             <a href="/accounts/logout">(Logout)</a>
         {% else %}
             <form action="/accounts/login" method="POST" style="display: inline;">
-                Username: <input type="text" name="username"> Password: <input type="password" name="password">
+                Username: <input type="text" name="username" autocomplete="username"> Password: <input type="password" name="password" autocomplete="current-password">
                 <button type="submit">Login</button>
             </form>
             or <a href="/accounts/registration">Register</a>
