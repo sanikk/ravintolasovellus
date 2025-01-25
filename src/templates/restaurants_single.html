@@ -18,14 +18,15 @@
         {% for day in weekdays %}
         <tr>
             <td>{{day}}</td>
-            <td>{{restaurant[day.lower() + 'start'] or ''}}</td>
-            <td>{{restaurant[day.lower() + 'end'] or ''}}</td>
+            <td>{{(restaurant[day.lower() + 'start'] or '') | output_time}}</td>
+            <td>{{(restaurant[day.lower() + 'end'] or '') | output_time}}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
 {% if session.user_id == restaurant.account_id %}
+<br>
 <form action="/" method="GET"> 
 <button formaction="/restaurants/delete/{{restaurant.id}}" formmethod="POST">Delete</button>
 <button formaction="/restaurants/edit/{{restaurant.id}}" formmethod="GET">Edit details</button>

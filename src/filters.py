@@ -8,7 +8,13 @@ def output_date(the_date):
 
 
 def output_datetime(the_datetime):
-    return the_datetime.strftime("%A %d. %m. %Y %I:%M")
+    return the_datetime.strftime("%A %d. %m. %Y %H:%M")
+
+
+def output_time(the_time):
+    if the_time:
+        return the_time.strftime("%H:%M")
+    print("filter miss")
 
 
 def output_rating_stars(rating: int, size: int = 30):

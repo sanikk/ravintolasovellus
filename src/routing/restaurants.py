@@ -69,7 +69,6 @@ def create_restaurant_endpoint():
             for day in day_name
             for time in ["start", "end"]
         }
-        print(f"{opening_hours=}")
         if not error and lat and long and place_id:
             ret = create_restaurant(
                 name,

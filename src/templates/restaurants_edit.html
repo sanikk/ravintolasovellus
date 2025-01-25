@@ -17,10 +17,10 @@
             {% for day in weekdays %}
             <tr>
                 <td>{{day}}</td>
-                <td><input type="text" id="timePicker" name="{{day.lower()}}start" placeholder="{{restaurant[day.lower() + 'start'] or ''}}"
-                    value="{{form_data.get("{{day.lower()}}start", "")}}"/></td>
-                <td><input type="text" id="timePicker" name="{{day.lower()}}end" placeholder="{{restaurant[day.lower() + 'end'] or ''}}"
-                    value="{{form_data.get("{{day.lower()}}end", "")}}"/></td>
+                <td><input type="text" id="timePicker" name="{{day.lower()}}start" placeholder="{{restaurant[day.lower() + 'start'] | output_time or ''}}"
+                    value="{{form_data.get("{{day.lower()}}start", "") | output_time }}"/></td>
+                <td><input type="text" id="timePicker" name="{{day.lower()}}end" placeholder="{{restaurant[day.lower() + 'end'] | output_time or ''}}"
+                    value="{{form_data.get("{{day.lower()}}end", "") | output_time }}"/></td>
             </tr>
             {% endfor %}
         </tbody>

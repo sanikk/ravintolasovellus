@@ -172,9 +172,11 @@ def create_restaurant(
         + ",".join(
             [f"{day.lower()}{time}" for day in day_name for time in ["start", "end"]]
         )
-        + "VALUES (TRUE, :name, :account_id, :address, :lat, :long, :place_id, :description, "
-        + ",".join([f":{day}{time}" for day in day_name for time in ["start", "end"]])
-        + " RETURNING id"
+        + ") VALUES (TRUE, :name, :account_id, :address, :lat, :long, :place_id, :description, "
+        + ",".join(
+            [f":{day.lower()}{time}" for day in day_name for time in ["start", "end"]]
+        )
+        + ") RETURNING id"
     )
     ret = db.session.execute(
         text(sql),

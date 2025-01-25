@@ -5,6 +5,7 @@ from filters import (
     output_rating_stars,
     output_account_name,
     output_full_name,
+    output_time,
     zip_filter,
 )
 from flask import Flask
@@ -23,9 +24,12 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+psycopg:///" + DATABASE_NAME
 # add template filters to be used on jinja2 templates
 app.add_template_filter(output_date, "output_date")
 app.add_template_filter(output_datetime, "output_datetime")
+app.add_template_filter(output_time, "output_time")
 app.add_template_filter(output_rating_stars, "output_rating_stars")
+
 app.add_template_filter(output_account_name, "output_account_name")
 app.add_template_filter(output_full_name, "output_full_name")
+
 app.add_template_filter(zip_filter, "zip")
 
 
