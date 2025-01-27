@@ -1,4 +1,4 @@
-from config import DATABASE_NAME, FLASK_SECRET_KEY
+from config import FLASK_SECRET_KEY
 from filters import (
     output_date,
     output_datetime,
@@ -14,12 +14,10 @@ from calendar import day_name
 
 
 app = Flask(__name__)
-if not DATABASE_NAME or not FLASK_SECRET_KEY:
-    raise RuntimeError(
-        "Please check your env file and its DATABASE_NAME and FLASK_SECRET_KEY."
-    )
+if not FLASK_SECRET_KEY:
+    raise RuntimeError("Please check your env file and its FLASK_SECRET_KEY.")
 app.secret_key = FLASK_SECRET_KEY
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+psycopg:///" + DATABASE_NAME
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 
 # add template filters to be used on jinja2 templates
 app.add_template_filter(output_date, "output_date")

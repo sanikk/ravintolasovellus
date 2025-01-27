@@ -1,15 +1,11 @@
 from invoke.tasks import task
-from src.db_setup import (
-    create_tables as db_create_tables,
-    drop_tables as db_drop_tables,
-)
-
-# from src.combine_harvester import combinator
+from secrets import token_hex
+from src.db_filler import fill_db
 
 
 @task
 def start(c):
-    c.run("flask --app src/app run", pty=True)
+    c.run("flask --app src/app run")
 
 
 @task
@@ -19,14 +15,7 @@ def dev(c):
 
 @task
 def build(c):
-    db_create_tables()
-
-
-@task
-def clean(c):
-    db_drop_tables()
-
-
-# @task
-# def fill(c):
-#     combinator('harvested.txt')
+    c.run("sqlite3 database.db < src/schema.sql")
+    with open(".env", "w") as fo:
+        fo.write(f"FLASK_SECRET_KEY={token_hex(16)}")
+    fill_db()

@@ -2,8 +2,6 @@ from psycopg import connect
 from psycopg.sql import SQL, Identifier
 from src.config import DATABASE_NAME
 
-# from werkzeug.security import generate_password_hash
-
 
 def get_connection():
     conn = connect(f"dbname={DATABASE_NAME}")
@@ -18,9 +16,7 @@ def drop_tables():
         "events",
         "buffets",
         "ratings",
-        "opening_hours",
         "restaurants",
-        "messages",
         "accounts",
     ]
     for table in table_list:
@@ -34,13 +30,6 @@ def drop_tables():
 
 def create_tables():
     conn, cur = get_connection()
-    # sql = SQL("ALTER DATABASE {} SET datestyle TO 'ISO, DMY'").format(
-    #     Identifier(DATABASE_NAME)
-    # )
-    # cur.execute(sql)
-    # conn.commit()
-
-    # id, active, username, password, email, billing_info, firstname, lastname, description
     sql = """CREATE TABLE IF NOT EXISTS accounts (
         id SERIAL PRIMARY KEY,
         active BOOL DEFAULT TRUE,
@@ -124,26 +113,6 @@ def create_tables():
         endtime TIME,
         price INTEGER,
         description VARCHAR(500)
-    )"""
-    cur.execute(sql)
-
-    sql = """CREATE TABLE IF NOT EXISTS messages (
-        id SERIAL PRIMARY KEY,
-        active BOOL DEFAULT TRUE,
-        sender_id INTEGER REFERENCES accounts(id),
-        receiver_id INTEGER REFERENCES accounts(id),
-        sent_on TIMESTAMPTZ DEFAULT NOW(),
-        title VARCHAR(256),
-        content VARCHAR(2048)
-    )"""
-    cur.execute(sql)
-
-    sql = """CREATE TABLE IF NOT EXISTS opening_hours (
-        restaurant_id INTEGER REFERENCES restaurants(id),
-        day_id INTEGER CHECK(day_id BETWEEN 1 and 7),
-        opens_at TIME,
-        closes_at TIME,
-        PRIMARY KEY(restaurant_id, day_id)
     )"""
     cur.execute(sql)
 
